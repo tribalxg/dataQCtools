@@ -17,7 +17,7 @@ You will need to install several following R packages once before using this cod
 
 ```{r }
 install.packages(c("zoo", "grid", "plotly", "readxl", "scales", "runner", 
-"ggthemes", "tidyverse", "lubridate", "gridExtra", "flextable", "RColorBrewer"))
+"ggthemes", "tidyverse", "lubridate", "gridExtra", "flextable", "RColorBrewer", "magrittr"))
 ```
 
 ## Practice example
