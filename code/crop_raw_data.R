@@ -25,6 +25,10 @@ source("dataQCfunctions.R")
 
 # base path: this is the shared part of the filepath to the directories
 # containing your raw data files, cropped data files, and cropped data plots
+# - if these folders are in the dataQCtools R project folder, you can use a relative path
+# - otherwise you can make this an absolute path
+# - you can also delete base_loc and paste0(base_loc, ...) and just explicitly 
+#   specify rawdata_loc, cropped_loc, and croppedplots_loc
 base_loc <- "data/2022_spring/"
 
 # directory containing raw data
