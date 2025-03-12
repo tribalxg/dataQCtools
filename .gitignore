@@ -4,3 +4,9 @@
 .RData
 .Ruserdata
 README.html
+data/2022_spring/2_cropped_csv/*
+data/2022_spring/2_cropped_plots/*
+data/2022_spring/3_qc_plots/*
+data/2021_fall/2_cropped_csv/*
+data/2021_fall/2_cropped_plots/*
+data/2021_fall/3_qc_plots/*
