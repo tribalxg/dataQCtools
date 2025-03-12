@@ -11,6 +11,16 @@ This code was developed by [Jess Kunke](https://github.com/jpierkunke), Kim Bray
 - Reads in quality-controlled data (after the user has removed or corrected any spurious values), computes the seven-day average daily maximum temperature (7DADM), compares these values against water quality standards to determine which sites were impaired on which dates, and outputs a table to be included in the Tribal assessment report (TAR).
 
 
-## To use this code
+## Setting up
 
+You will need to install several following R packages once before using this code for the first time on a given computer. To do this, you can run this line of code in RStudio:
+
+```{r }
+install.packages(c("zoo", "grid", "plotly", "readxl", "scales", "runner", 
+"ggthemes", "tidyverse", "lubridate", "gridExtra", "flextable", "RColorBrewer"))
+```
+
+## Practice example
+
+You can use the provided example data to practice using the code, then substitute your own data.
 
