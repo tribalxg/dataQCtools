@@ -1,7 +1,7 @@
 # this script crops raw data from HOBO files
 #
-# input: raw data files, ldrtimes file
-# output: cropped data files
+# input: raw data files (csv format), ldrtimes file (Excel format)
+# output: cropped data files (csv format), plots of cropped data
 #
 # Important:
 #   Before running this script, rename raw HOBO files to have filenames in 
@@ -20,26 +20,28 @@
 # - make sure to add a slash "/" at the end of each file path!
 #
 
+# load all the packages and functions you'll need
 source("dataQCfunctions.R")
 
-# base path: this is the shared part of the directory to your raw, cropped file, 
-# and cropped plot directories
-base_loc <- "2022/2022 summer_NEW/"
+# base path: this is the shared part of the filepath to the directories
+# containing your raw data files, cropped data files, and cropped data plots
+base_loc <- "data/2022_spring/"
 
 # directory containing raw data
-rawdata_loc <- paste0(base_loc, "2. Cropped files/1. Raw csv/")
+rawdata_loc <- paste0(base_loc, "1_raw_csv/")
 # directory where cropped data will be (or currently is) stored
 # csv files in this directory are data files to be plotted!
-cropped_loc <- paste0(base_loc, "2. Cropped files/2. Cropped csv/")
+cropped_loc <- paste0(base_loc, "2_cropped_csv/")
 # directory where cropped vs raw plots will be stored
-croppedplots_loc <- paste0(base_loc, "2. Cropped files/3. Cropped plots/")
+croppedplots_loc <- paste0(base_loc, "2_cropped_plots/")
 # name of your LDRTimes file that has the lookup table with deployment/retrieval dates
+# the code assumes this file is in rawdata_loc
 ldrtimes_fn <- "LDRTimes_summer22.xlsx"
 
 # check that R can find your raw data files
 # Get all temperature data filenames
 # note: * is called a glob, short for global
-# IMPORTANT: filenames must have format sitename_medium_deployseason_deployyear.csv
+# IMPORTANT: filenames must be in the format sitename_medium_deployseason_deployyear.csv
 #            e.g. NolanLower_air_sum_23.csv
 csv_files = list.files(path = rawdata_loc, pattern = '*csv')
 # this is now a list of all filenames; we haven't read in the data yet, but
@@ -50,8 +52,8 @@ csv_files
 # note: this assumes the LDR file is in the folder indicated by rawdata_loc
 ldrtimes = read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
 
+# once you're sure that file paths are working and your ldrtimes looks right,
 # crop the files!
-crop_raw_data(rawdata_loc, cropped_loc, croppedplots_loc,
-              ldrtimes_fn = ldrtimes_fn)
+crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc)
 
 
