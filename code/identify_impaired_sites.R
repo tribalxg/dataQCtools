@@ -61,15 +61,15 @@
 # 2       07/02     12/31   12
 # -----------------------------
 
+source("code/dataQCfunctions.R")
+
 # all packages needed for dataQCfunctions.R are loaded in that script,
 # but this script also uses the magrittr pipe (%!>%), so we load that here
 library(magrittr)
 
-source("code/dataQCfunctions.R")
-
 # to handle data from a new water year, just change these file paths
-fall_data_loc <- "2021/2021 fall/3. Finalized data/"
-sum_data_loc <- "2022/2022 summer_NEW/4. Finalized data/"
+fall_data_loc <- "data/2022_spring/4_final_data/"
+sum_data_loc <- "data/2022_spring/4_final_data/"
 
 # read in site-group lookup table
 # - For each site, which WQS group is it in?
