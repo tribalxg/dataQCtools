@@ -31,7 +31,7 @@ source("code/dataQCfunctions.R")
 #   specify rawdata_loc, cropped_loc, and croppedplots_loc (see make_qc_plots.R 
 #   for an example of this)
 # - make sure filepaths for folders always end in "/"!
-base_loc <- "data/2022_spring/"
+base_loc <- "data/2022_summer/"
 
 # directory containing raw data
 rawdata_loc <- paste0(base_loc, "1_raw_csv/")

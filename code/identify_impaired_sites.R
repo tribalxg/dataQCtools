@@ -68,8 +68,8 @@ source("code/dataQCfunctions.R")
 library(magrittr)
 
 # to handle data from a new water year, just change these file paths
-fall_data_loc <- "data/2022_spring/4_final_data/"
-sum_data_loc <- "data/2022_spring/4_final_data/"
+fall_data_loc <- "data/2022_summer/4_final_data/"
+sum_data_loc <- "data/2022_summer/4_final_data/"
 
 # read in site-group lookup table
 # - For each site, which WQS group is it in?

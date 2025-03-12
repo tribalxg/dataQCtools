@@ -12,9 +12,9 @@
 source("code/dataQCfunctions.R")
 
 # directory containing cropped data to be plotted
-cropped_loc <- "data/2022_spring/2_cropped_csv/"
+cropped_loc <- "data/2022_summer/2_cropped_csv/"
 # directory where QC plots will be stored
-qc_plots_loc <- "data/2022_spring/3_qc_plots/"
+qc_plots_loc <- "data/2022_summer/3_qc_plots/"
 
 # get a list of all the cropped files
 filenames <- list.files(path = cropped_loc, pattern=".csv")
