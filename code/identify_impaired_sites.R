@@ -65,10 +65,9 @@
 # but this script also uses the magrittr pipe (%!>%), so we load that here
 library(magrittr)
 
-source("dataQCfunctions.R")
+source("code/dataQCfunctions.R")
 
-# to handle data from a new water year, just change these three file paths
-base_loc <- "/path/to/your/data/"
+# to handle data from a new water year, just change these file paths
 fall_data_loc <- "2021/2021 fall/3. Finalized data/"
 sum_data_loc <- "2022/2022 summer_NEW/4. Finalized data/"
 
