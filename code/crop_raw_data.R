@@ -22,6 +22,10 @@
 
 # load all the packages and functions you'll need
 source("code/dataQCfunctions.R")
+# if you'd like to have your computer make sound when the job is done,
+# install and load this package
+# install.packages("beepr") # uncomment and run this step only once, then comment it again
+# library(beepr) # leave this uncommented
 
 # base path: this is the shared part of the filepath to the directories
 # containing your raw data files, cropped data files, and cropped data plots
@@ -61,5 +65,7 @@ ldrtimes = read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
 # once you're sure that file paths are working and your ldrtimes looks right,
 # crop the files!
 crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc)
+# beep(8) # uncomment if you want to use beepr!
+# system("say 'Attention all your data has been cropped'") # or on a Mac you can use this
 
 
