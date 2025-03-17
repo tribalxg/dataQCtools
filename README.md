@@ -2,6 +2,7 @@ dataQCtools: automate data cropping, QC, and more
 ====
 
 ## Overview
+
 This code was developed by [Jess Kunke](https://github.com/jpierkunke), Kim Bray, and [Angie Reed](https://github.com/angiereed04468) to automate several steps of the Hoh Tribe's high-frequency water (and sometimes air) temperature data processing and quality control (QC). Specifically, this code does the following tasks:
 
 - Reads in many different csv files from HOBO sensors at different sites and combines the data together into a common dataset
