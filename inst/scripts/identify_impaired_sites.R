@@ -4,8 +4,8 @@
 # Goal: given quality-controlled data for a given water year,
 # identify which sites are impaired and the dates of their exceedances
 
-# a creek/site is impaired if its temperatures exceed water quality standards 
-# (WQS) at least twice during the water year and there is a period of at least 
+# a creek/site is impaired if its temperatures exceed water quality standards
+# (WQS) at least twice during the water year and there is a period of at least
 # 7 days between two of those exceedances
 
 # The output of this script is a table like the following:
@@ -21,19 +21,19 @@
 # Summary of this code:
 # - Read in quality-controlled data for all sites for a given water year
 # - compute 7DADM
-# - use a site-group lookup table to determine which WQS group each site 
+# - use a site-group lookup table to determine which WQS group each site
 #   is in
-# - use a group-WQS lookup table to determine what the WQS is for that 
+# - use a group-WQS lookup table to determine what the WQS is for that
 #   group over the course of the water year
 # - make the site impairments table (example shown above)
 
 # site-group lookup table:
-# - two sites are in the same group if they have the same WQS 
+# - two sites are in the same group if they have the same WQS
 #   schedule as each other throughout the water year
 # - there is one row for each site
 #
 # example:
-# 
+#
 # Site              Group
 # -----------------------------
 # AndersonLower     1
@@ -49,9 +49,9 @@
 # - this can be generated using the write_group_wqs() function,
 #   or it can be written in a spreadsheet and exported to a csv file
 #   called group_wqs.csv
-# 
+#
 # example:
-# 
+#
 # Group   FromDate  ToDate  WQS
 # -----------------------------
 # 1       01/01     12/31   15
@@ -68,12 +68,12 @@ source("code/dataQCfunctions.R")
 library(magrittr)
 
 # to handle data from a new water year, just change these file paths
-fall_data_loc <- "data/2022_summer/4_final_data/"
+fall_data_loc <- "data/2021_fall/4_final_data/"
 sum_data_loc <- "data/2022_summer/4_final_data/"
 
 # read in site-group lookup table
 # - For each site, which WQS group is it in?
-site_group = read_csv("site_group.csv") %>% 
+site_group = read_csv("lookup_tables/site_group.csv") %>%
   # removes any completely empty rows
   filter_all(any_vars(!is.na(.)))
 
@@ -84,8 +84,8 @@ site_group = read_csv("site_group.csv") %>%
 
 # read in group-WQS lookup table
 # - For each group, how does the WQS change over the water year?
-group_wqs = read_csv("group_wqs.csv") %>%
-  # removes any completely empty rows (in case this data frame is written 
+group_wqs = read_csv("lookup_tables/group_wqs.csv") %>%
+  # removes any completely empty rows (in case this data frame is written
   # in Excel in the future and Excel adds extra empty lines)
   filter_all(any_vars(!is.na(.)))
 
