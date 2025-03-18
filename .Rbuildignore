@@ -1,3 +1,6 @@
 ^dataQCtools\.Rproj$
 ^\.Rproj\.user$
 .Rhistory
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
