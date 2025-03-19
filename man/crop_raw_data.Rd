@@ -20,6 +20,10 @@ Crop raw water/air temperature data from HOBO sensors
 }
 \examples{
 
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
 base_loc <- "data/2022_summer/"
 rawdata_loc <- paste0(base_loc, "1_raw_csv/")
 cropped_loc <- paste0(base_loc, "2_cropped_csv/")
