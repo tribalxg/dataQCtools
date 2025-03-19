@@ -78,8 +78,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># read in LDRTimes lookup table and take a look at it</span></span></span>
-<span class="r-in"><span><span class="va">ldrtimes</span> <span class="op">=</span> <span class="fu">read_xlsx</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in read_xlsx(paste0(rawdata_loc, ldrtimes_fn)):</span> could not find function "read_xlsx"</span>
+<span class="r-in"><span><span class="va">ldrtimes</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `path` does not exist: ‘data/2022_summer/1_raw_csv/LDRTimes_summer22.xlsx’</span>
 <span class="r-in"><span><span class="va">ldrtimes</span> <span class="co"># or View(ldrtimes)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'ldrtimes' not found</span>
 <span class="r-in"><span></span></span>
