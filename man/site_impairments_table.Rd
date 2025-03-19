@@ -17,7 +17,6 @@ A table such as the following:\tabular{lll}{
    Site 3 \tab Yes \tab 10/20, 4/28-4/29 \cr
    Site 4 \tab No \tab  \cr
    Site 5 \tab No \tab  \cr
-   ... \tab ... \tab ... \cr
 }
 }
 \description{

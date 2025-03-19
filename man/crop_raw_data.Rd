@@ -33,7 +33,7 @@ csv_files = list.files(path = rawdata_loc, pattern = '*csv')
 csv_files
 
 # read in LDRTimes lookup table and take a look at it
-ldrtimes = read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
+ldrtimes = readxl::read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
 ldrtimes # or View(ldrtimes)
 
 # then crop the data!
