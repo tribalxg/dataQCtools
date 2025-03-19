@@ -47,10 +47,11 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="dataqctools-automate-data-cropping-qc-and-more">dataQCtools: automate data cropping, QC, and more<a class="anchor" aria-label="anchor" href="#dataqctools-automate-data-cropping-qc-and-more"></a>
 </h1></div>
+<p>Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This code was developed by <a href="https://github.com/jpierkunke" class="external-link">Jess Kunke</a>, Kim Bray, and <a href="https://github.com/angiereed04468" class="external-link">Angie Reed</a> to automate several steps of the Hoh Tribe’s high-frequency water (and sometimes air) temperature data processing and quality control (QC). Specifically, this code does the following tasks:</p>
+<p>This code was developed by <a href="https://github.com/jpierkunke" class="external-link">Jess Kunke</a>, Kim Bray, and <a href="https://github.com/angiereed04468" class="external-link">Angie Reed</a> to automate several steps of the Hoh Tribe’s high-frequency water and air temperature data processing and quality control (QC). Specifically, this code does the following tasks:</p>
 <ul>
 <li>Reads in many different csv files from HOBO sensors at different sites and combines the data together into a common dataset</li>
 <li>Crops the data to remove any measurements recorded before sensor deployment (between the time the sensor is turned on and the time it is fully installed in the field) or after sensor retrieval (between the time the sensor is removed from the field and brought back to the lab).</li>
@@ -63,12 +64,14 @@
 <h2 id="setting-up">Setting up<a class="anchor" aria-label="anchor" href="#setting-up"></a>
 </h2>
 <p>You will need to install several following R packages once before using this code for the first time on a given computer. To do this, you can run this line of code in RStudio:</p>
-<p><code>{r } install.packages(c("zoo", "grid", "plotly", "readxl", "scales", "runner",  "ggthemes", "tidyverse", "lubridate", "gridExtra", "flextable", "RColorBrewer", "magrittr"))</code></p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"zoo"</span>, <span class="st">"grid"</span>, <span class="st">"plotly"</span>, <span class="st">"readxl"</span>, <span class="st">"scales"</span>, <span class="st">"runner"</span>, </span>
+<span><span class="st">"ggthemes"</span>, <span class="st">"tidyverse"</span>, <span class="st">"lubridate"</span>, <span class="st">"gridExtra"</span>, <span class="st">"flextable"</span>, <span class="st">"RColorBrewer"</span>, <span class="st">"magrittr"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="practice-example">Practice example<a class="anchor" aria-label="anchor" href="#practice-example"></a>
 </h2>
-<p>You can use the provided example data to practice using the code, then substitute your own data.</p>
+<p>You can use the provided example data to practice using the code, then substitute your own data. Please see the vignettes/articles and the help pages for examples.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
