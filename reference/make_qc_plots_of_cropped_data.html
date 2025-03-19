@@ -77,7 +77,7 @@ NolanLower_air_sum_23_cropped.csv.</deployyear></deployseason></sitename></p></d
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Reading in cropped data files..."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Done reading in cropped data.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Computing temperature differences...</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in Combined %&gt;% rename(row = V1, datetime = V2, temp = V3) %&gt;% mutate(datetime = ymd_hms(datetime)) %&gt;%     mutate(date = date(datetime)) %&gt;% group_by(sitename, date,     media) %&gt;% summarize(dailymax = max(temp, na.rm = TRUE),     dailymin = min(temp, na.rm = TRUE)) %&gt;% pivot_wider(names_from = media,     values_from = c(dailymin, dailymax)) %&gt;% mutate(WaterRange = dailymax_water -     dailymin_water) %&gt;% pivot_longer(cols = dailymin_water:WaterRange,     names_to = "calc", values_to = "value"):</span> could not find function "%&gt;%"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in pivot_longer(., cols = dailymin_water:WaterRange, names_to = "calc",     values_to = "value"):</span> could not find function "pivot_longer"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
