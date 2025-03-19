@@ -18,6 +18,10 @@
 #'
 #' @examples
 #'
+#' library(readxl)
+#' library(dplyr)
+#' library(ggplot2)
+#'
 #' base_loc <- "data/2022_summer/"
 #' rawdata_loc <- paste0(base_loc, "1_raw_csv/")
 #' cropped_loc <- paste0(base_loc, "2_cropped_csv/")
@@ -65,26 +69,26 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
     # This tryCatch handles either hh:mm:ss or hh:mm format in csv files
     this.data =  tryCatch(
       {
-        read_csv(paste0(rawdata_loc, this.file),
+        readr::read_csv(paste0(rawdata_loc, this.file),
                  skip = 2, # skip the first two lines of the file
                  col_select = 1:3, # read only the first three columns of data
                  col_names = FALSE, # don't try to name columns from a row of the file
                  show_col_types = FALSE) %>% # suppresses print message
-          rename("row.num" = X1,
+          dplyr::rename("row.num" = X1,
                  "datetime" = X2,
                  "temperature" = X3) %>%
-          mutate(datetime = mdy_hms(datetime)) #for datetime in hh:mm:ss
+          dplyr::mutate(datetime = mdy_hms(datetime)) #for datetime in hh:mm:ss
       },
       warning = function(cond) { #if datetime isn't in hh:mm:ss, will now try hh:mm format
-        read_csv(paste0(rawdata_loc, this.file),
+        readr::read_csv(paste0(rawdata_loc, this.file),
                  skip = 2, # skip the first two lines of the file
                  col_select = 1:3, # read only the first three columns of data
                  col_names = FALSE, # don't try to name columns from a row of the file
                  show_col_types = FALSE) %>% # suppresses print message
-          rename("row.num" = X1,
+          dplyr::rename("row.num" = X1,
                  "datetime" = X2,
                  "temperature" = X3) %>%
-          mutate(datetime = mdy_hm(datetime)) #for datetime in hh:mm
+          dplyr::mutate(datetime = mdy_hm(datetime)) #for datetime in hh:mm
       }
     )
 
@@ -93,10 +97,10 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
       # select the row(s) of ldrtimes that match this datafile
       # should be exactly one row, but if there are no rows or multiple rows that
       # match, this step will pull that many rows
-      filter(site == csv.site, deploy_season == csv.season,
+      dplyr::filter(site == csv.site, deploy_season == csv.season,
              deploy_year == csv.year, media == csv.media) %>%
       # keep just the deploy_time and retrieval_time variables/columns
-      select(deploy_time, retrieval_time)
+      dplyr::select(deploy_time, retrieval_time)
 
     if(nrow(deploy.retrieval) == 0){
       stop("no rows of ldrtimes matched this csv file.")
@@ -109,21 +113,21 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
     retrieval = deploy.retrieval$retrieval_time
 
     if(retrieval > deploy) {
-      cropped.data = filter(this.data,
+      cropped.data = dplyr::filter(this.data,
                             datetime > deploy,
                             datetime < retrieval)
 
     } # if(retrieval > deploy)
 
     # write cropped csv files to cropped folder
-    write_csv(cropped.data,
+    readr::write_csv(cropped.data,
               file=paste0(cropped_loc, str_split_i(this.file,"[.]",1),"_cropped.csv"))
 
     #Create a dataframe of the raw and cropped data
-    cropvraw <- left_join(this.data, cropped.data, by=c("row.num", "datetime")) %>%
+    cropvraw <- dplyr::left_join(this.data, cropped.data, by=c("row.num", "datetime")) %>%
       rename(raw.temp=temperature.x, cropped.temp =temperature.y) %>%#rename temperature from each file
       #create new column of data type (raw or cropped for plotting in ggplot)
-      pivot_longer(cols=raw.temp:cropped.temp, names_to="type", values_to="temp")
+      tidyr::pivot_longer(cols=raw.temp:cropped.temp, names_to="type", values_to="temp")
 
     cropvraw.plot <- ggplot(cropvraw, aes(x=datetime, y=temp, color=type)) +
       geom_line() +
