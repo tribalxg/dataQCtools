@@ -1,8 +1,9 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2025-03-20T22:07Z
+articles:
+  articles/cropping: cropping.html
+last_built: 2025-03-20T22:33Z
 urls:
   reference: https://tribalxg.github.io/dataQCtools/reference
   article: https://tribalxg.github.io/dataQCtools/articles
