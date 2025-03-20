@@ -30,14 +30,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/7DADM_site_impairment.html">Computing 7DADM and identifying site impairments</a></li>
-    <li><a class="dropdown-item" href="../articles/cropping.html">Cropping data recorded before deployment and after retrieval</a></li>
-    <li><a class="dropdown-item" href="../articles/qcplots.html">Making QC plots</a></li>
-  </ul>
-</li>
+<li class="active nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -65,9 +58,52 @@
 
     
     
+<div class="section level2">
+<h2 id="editable-script">Editable script<a class="anchor" aria-label="anchor" href="#editable-script"></a>
+</h2>
+<p>Here is a script you can use if you would prefer to have all the code
+for the QC plot step in a single script rather than an installable
+package format. Just click the clipboard icon in the top right corner of
+this code chunk to copy the code, then open a new R script in RStudio
+and paste it there, and save the script wherever you would like to store
+it on your computer.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load necessary libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://zoo.R-Forge.R-project.org/" class="external-link">zoo</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://plotly-r.com" class="external-link">plotly</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">runner</span><span class="op">)</span> <span class="co"># for moving averages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jrnold.github.io/ggthemes/" class="external-link">ggthemes</a></span><span class="op">)</span> <span class="co"># for plotting</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span> <span class="co"># need for dplyr and ggplot2</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span> <span class="co"># for handling dates</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ardata-fr.github.io/flextable-book/" class="external-link">flextable</a></span><span class="op">)</span> <span class="co"># for making tables with conditional formatting, merged cells and more</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># directory containing cropped data to be plotted</span></span>
+<span><span class="va">cropped_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2022_summer/2_cropped_csv/"</span></span>
+<span><span class="co"># directory where QC plots will be stored</span></span>
+<span><span class="va">qc_plots_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2022_summer/3_qc_plots/"</span></span>
+<span></span>
+<span><span class="co"># get a list of all the cropped files</span></span>
+<span><span class="va">filenames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">cropped_loc</span>, pattern<span class="op">=</span><span class="st">".csv"</span><span class="op">)</span></span>
+<span><span class="co"># this is now a list of all filenames; we haven't read in the data yet, but</span></span>
+<span><span class="co"># make sure this lists all the cropped files you want to plot</span></span>
+<span><span class="va">filenames</span></span>
+<span></span>
+<span><span class="co"># make QC plots!</span></span>
+<span><span class="fu"><a href="../reference/make_qc_plots_of_cropped_data.html">make_qc_plots_of_cropped_data</a></span><span class="op">(</span><span class="va">cropped_loc</span>, <span class="va">qc_plots_loc</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="demo-of-crop_raw_data">Demo of <code>crop_raw_data()</code><a class="anchor" aria-label="anchor" href="#demo-of-crop_raw_data"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tribalxg.github.io/dataQCtools/">dataQCtools</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
