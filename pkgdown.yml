@@ -3,7 +3,8 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   articles/cropping: cropping.html
-last_built: 2025-03-20T22:33Z
+  articles/dataQCtools: dataQCtools.html
+last_built: 2025-03-20T22:42Z
 urls:
   reference: https://tribalxg.github.io/dataQCtools/reference
   article: https://tribalxg.github.io/dataQCtools/articles
