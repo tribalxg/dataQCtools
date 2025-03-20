@@ -35,7 +35,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/cropping.html">Cropping data recorded before deployment and after retrieval</a></li>
+<li><a class="dropdown-item" href="articles/7DADM_site_impairment.html">Computing 7DADM and identifying site impairments</a></li>
+    <li><a class="dropdown-item" href="articles/cropping.html">Cropping data recorded before deployment and after retrieval</a></li>
+    <li><a class="dropdown-item" href="articles/qcplots.html">Making QC plots</a></li>
   </ul>
 </li>
       </ul>
@@ -53,17 +55,17 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="dataqctools-automate-data-cropping-qc-and-more">dataQCtools: automate data cropping, QC, and more<a class="anchor" aria-label="anchor" href="#dataqctools-automate-data-cropping-qc-and-more"></a>
 </h1></div>
-<p>Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network.</p>
+<p>Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network. For guides on two ways you can try this code out for your own data workflow, see the “How to use this code” section below.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This code was developed by <a href="https://github.com/jpierkunke" class="external-link">Jess Kunke</a>, Kim Bray, and <a href="https://github.com/angiereed04468" class="external-link">Angie Reed</a> to automate several steps of the Hoh Tribe’s high-frequency water and air temperature data processing and quality control (QC). Specifically, this code does the following tasks:</p>
+<p>This code was developed by <a href="https://github.com/jpierkunke" class="external-link">Jess Kunke</a>, Kim Bray, and <a href="https://github.com/angiereed04468" class="external-link">Angie Reed</a> to automate several steps of the Hoh Tribe’s high-frequency water and air temperature data processing and quality control (QC). Specifically, this code currently does the following tasks:</p>
 <ul>
-<li>Reads in many different csv files from HOBO sensors at different sites and combines the data together into a common dataset</li>
+<li>Reads in many different csv files from HOBO sensors at different sites and combines the data together into a common dataset.</li>
 <li>Crops the data to remove any measurements recorded before sensor deployment (between the time the sensor is turned on and the time it is fully installed in the field) or after sensor retrieval (between the time the sensor is removed from the field and brought back to the lab).</li>
 <li>Plots the cropped and raw data together to visualize how much data was cropped for each site.</li>
 <li>Generates QC plots for identifying suspicious values to be manually corrected. This step could be fully automated, but the current script allows the user to manually explore the results and make decisions.</li>
-<li>Reads in quality-controlled data (after the user has removed or corrected any spurious values), computes the seven-day average daily maximum temperature (7DADM), compares these values against water quality standards to determine which sites were impaired on which dates, and outputs a table to be included in the Tribal assessment report (TAR).</li>
+<li>Reads in quality-controlled data (after the user has manually removed or corrected any spurious values), computes the seven-day average daily maximum temperature (7DADM), compares these values against water quality standards to determine which sites were impaired on which dates, and outputs a table to be included in the Tribal assessment report (TAR).</li>
 </ul>
 </div>
 <div class="section level2">
@@ -73,11 +75,12 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"zoo"</span>, <span class="st">"grid"</span>, <span class="st">"plotly"</span>, <span class="st">"readxl"</span>, <span class="st">"scales"</span>, <span class="st">"runner"</span>, </span>
 <span><span class="st">"ggthemes"</span>, <span class="st">"tidyverse"</span>, <span class="st">"lubridate"</span>, <span class="st">"gridExtra"</span>, <span class="st">"flextable"</span>, <span class="st">"RColorBrewer"</span>, <span class="st">"magrittr"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="practice-example">Practice example<a class="anchor" aria-label="anchor" href="#practice-example"></a>
-</h2>
-<p>You can use the provided example data to practice using the code, then substitute your own data. Please see the vignettes/articles and the help pages for examples.</p>
+<p>You can use the provided example data to practice using the code, then substitute your own data. Please see the articles and documentation for code examples and guidance.</p>
+<p>There are two basic approaches you can take:</p>
+<ol style="list-style-type: decimal">
+<li>Copy and paste the scripts provided in the articles (see the top menu of <a href="https://tribalxg.github.io/dataQCtools/index.html">the dataQCtools page</a>) into blank R scripts in RStudio on your computer. These versions of the code do not use the package functions but rather combine the code in those functions into task-specific scripts. These can be modified for your particular equipment, data collection, analysis workflow, and other considerations. Please feel free to reach out to <a href="https://jpierkunke.github.io/" class="external-link">Jess</a> if you have questions about how to do this or ideas for how to expand this code to handle your setting.</li>
+<li>Install the <code>dataQCtools</code> R package. Ideally over time we will continue to incorporate a variety of workflows, equipment types, and more into the code to make it flexible across Tribes, and then you can simply install the R package and use the functions and documentation.</li>
+</ol>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
