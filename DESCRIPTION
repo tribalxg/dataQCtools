@@ -17,6 +17,7 @@ Imports:
     ggthemes,
     grid,
     gridExtra,
+    htmlwidgets,
     lubridate,
     magrittr,
     plotly,
@@ -28,5 +29,6 @@ Imports:
     scales,
     stringr,
     tidyr,
+    utils,
     zoo
 URL: https://tribalxg.github.io/dataQCtools/

@@ -8,9 +8,18 @@
 
 #' Crop raw water/air temperature data from HOBO sensors
 #'
-#' @param rawdata_loc File path to the directory containing the raw data to be cropped. The names of the raw data files must be in the format sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.
-#' @param ldrtimes_fn Filename for the LDRTimes file, the lookup table of deployment and retrieval times. This file is assumed to be in the same folder as the raw data.
-#' @param cropped_loc File path to the directory where cropped data files will be written and stored.
+#' @param rawdata_loc File path to the directory containing the raw data to be
+#' cropped. The names of the raw data files must be in the format
+#' sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.
+#' @param ldrtimes_fn Filename for the LDRTimes file, the lookup table of
+#' deployment and retrieval times. This file is assumed to be in the same folder
+#' as the raw data.
+#' @param cropped_loc File path to the directory where cropped data files will
+#' be written and stored.
+#' @param nfiles Number of files to process. Default value is `NULL`, in which
+#' case all files in the raw data directory `rawdata_loc` are processed. If
+#' `nfiles` is set to a positive integer such as 3, then only the first three
+#' files in `rawdata_loc` will be cropped.
 #'
 #' @return
 #' @export
@@ -42,7 +51,7 @@
 #' # then crop the data!
 #' crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc)
 #'
-crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc){ #, croppedplots_loc){
+crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, nfiles = NULL){ #, croppedplots_loc){
   cropped_loc = paste0(cropped_loc, "2_cropped_csv/")
   croppedplots_loc = paste0(cropped_loc, "2_cropped_plots/")
   dir.create(cropped_loc) #, showWarnings = FALSE)
@@ -53,6 +62,8 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc){ #, croppedplots
   # read in LDR file
   # - this assumes the LDR file is an excel file in the folder indicated by rawdata_loc
   ldrtimes = readxl::read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
+
+  if(!is.null(nfiles)){csv_files = csv_files[1:nfiles]}
 
   i = 0
   for(this.file in csv_files){

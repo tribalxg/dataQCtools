@@ -4,14 +4,24 @@
 \alias{crop_raw_data}
 \title{Crop raw water/air temperature data from HOBO sensors}
 \usage{
-crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc)
+crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc, nfiles = NULL)
 }
 \arguments{
-\item{rawdata_loc}{File path to the directory containing the raw data to be cropped. The names of the raw data files must be in the format sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.}
+\item{rawdata_loc}{File path to the directory containing the raw data to be
+cropped. The names of the raw data files must be in the format
+sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.}
 
-\item{ldrtimes_fn}{Filename for the LDRTimes file, the lookup table of deployment and retrieval times. This file is assumed to be in the same folder as the raw data.}
+\item{ldrtimes_fn}{Filename for the LDRTimes file, the lookup table of
+deployment and retrieval times. This file is assumed to be in the same folder
+as the raw data.}
 
-\item{cropped_loc}{File path to the directory where cropped data files will be written and stored.}
+\item{cropped_loc}{File path to the directory where cropped data files will
+be written and stored.}
+
+\item{nfiles}{Number of files to process. Default value is \code{NULL}, in which
+case all files in the raw data directory \code{rawdata_loc} are processed. If
+\code{nfiles} is set to a positive integer such as 3, then only the first three
+files in \code{rawdata_loc} will be cropped.}
 }
 \description{
 Crop raw water/air temperature data from HOBO sensors

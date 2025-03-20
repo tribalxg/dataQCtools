@@ -5,5 +5,6 @@
 #' @importFrom magrittr %!>%
 #' @importFrom rlang .data
 #' @importFrom stringr str_split_i
+#' @importFrom utils read.csv
 ## usethis namespace: end
 NULL
