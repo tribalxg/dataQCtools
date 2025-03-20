@@ -10,5 +10,5 @@
 #'
 #' @examples
 match_sites_to_WQS_groups = function(wq_data, site_group){
-  return(dplyr::left_join(wq_data, site_group, by = dplyr::join_by(SiteName == site)))
+  return(dplyr::left_join(wq_data, site_group, by = dplyr::join_by(.data$SiteName == .data$site)))
 }
