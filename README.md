@@ -27,6 +27,11 @@ You can use the provided example data to practice using the code, then substitut
 
 There are two basic approaches you can take:
 
-1. Copy and paste the scripts provided in the articles (see the top menu of [the dataQCtools page](https://tribalxg.github.io/dataQCtools/index.html)) into blank R scripts in RStudio on your computer. These versions of the code do not use the package functions but rather combine the code in those functions into task-specific scripts. These can be modified for your particular equipment, data collection, analysis workflow, and other considerations. Please feel free to reach out to [Jess](https://jpierkunke.github.io/) if you have questions about how to do this or ideas for how to expand this code to handle your setting.
-2. Install the `dataQCtools` R package. Ideally over time we will continue to incorporate a variety of workflows, equipment types, and more into the code to make it flexible across Tribes, and then you can simply install the R package and use the functions and documentation.
+1. Copy and paste the scripts provided in the articles (see the top menu of [the dataQCtools page](https://tribalxg.github.io/dataQCtools/index.html)) into blank R scripts in RStudio on your computer. 
+  - This approach does NOT require doing anything with git or GitHub or the `dataQCtools` repository. You can just visit the website and copy code to paste into an R script on your computer.
+  - These script versions of the code do not use the `dataQCtools` package functions but rather combine the code in those functions into task-specific scripts. These can be modified for your particular equipment, data collection, analysis workflow, and other considerations.
+  - Please feel free to reach out to [Jess](https://jpierkunke.github.io/) if you have questions or feedback about how to adapt the code for your equipment, workflow, etc.
+
+2. Install the `dataQCtools` R package.
+  - Ideally over time we will continue to incorporate a variety of workflows, equipment types, and more into the code to make it flexible across Tribes, and then you can simply install the R package and use the functions and documentation.
 
