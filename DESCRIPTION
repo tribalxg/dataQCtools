@@ -32,3 +32,4 @@ Imports:
     utils,
     zoo
 URL: https://tribalxg.github.io/dataQCtools/
+Config/Needs/website: rmarkdown
