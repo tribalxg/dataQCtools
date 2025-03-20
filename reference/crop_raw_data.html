@@ -37,7 +37,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">crop_raw_data</span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span>, <span class="va">cropped_loc</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">crop_raw_data</span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span>, <span class="va">cropped_loc</span>, nfiles <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -45,15 +45,27 @@
 
 
 <dl><dt id="arg-rawdata-loc">rawdata_loc<a class="anchor" aria-label="anchor" href="#arg-rawdata-loc"></a></dt>
-<dd><p>File path to the directory containing the raw data to be cropped. The names of the raw data files must be in the format sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.</p></dd>
+<dd><p>File path to the directory containing the raw data to be
+cropped. The names of the raw data files must be in the format
+sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.</p></dd>
 
 
 <dt id="arg-ldrtimes-fn">ldrtimes_fn<a class="anchor" aria-label="anchor" href="#arg-ldrtimes-fn"></a></dt>
-<dd><p>Filename for the LDRTimes file, the lookup table of deployment and retrieval times. This file is assumed to be in the same folder as the raw data.</p></dd>
+<dd><p>Filename for the LDRTimes file, the lookup table of
+deployment and retrieval times. This file is assumed to be in the same folder
+as the raw data.</p></dd>
 
 
 <dt id="arg-cropped-loc">cropped_loc<a class="anchor" aria-label="anchor" href="#arg-cropped-loc"></a></dt>
-<dd><p>File path to the directory where cropped data files will be written and stored.</p></dd>
+<dd><p>File path to the directory where cropped data files will
+be written and stored.</p></dd>
+
+
+<dt id="arg-nfiles">nfiles<a class="anchor" aria-label="anchor" href="#arg-nfiles"></a></dt>
+<dd><p>Number of files to process. Default value is <code>NULL</code>, in which
+case all files in the raw data directory <code>rawdata_loc</code> are processed. If
+<code>nfiles</code> is set to a positive integer such as 3, then only the first three
+files in <code>rawdata_loc</code> will be cropped.</p></dd>
 
 </dl></div>
 

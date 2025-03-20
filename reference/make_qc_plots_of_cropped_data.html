@@ -62,22 +62,54 @@ NolanLower_air_sum_23_cropped.csv.</deployyear></deployseason></sitename></p></d
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">cropped_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2022_summer/2_cropped_csv/"</span></span></span>
-<span class="r-in"><span><span class="va">qc_plots_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2022_summer/3_qc_plots/"</span></span></span>
+<span class="r-in"><span><span class="co"># this code assumes you already have some cropped data available</span></span></span>
+<span class="r-in"><span><span class="co"># so for the example, let's crop some of the raw data that is</span></span></span>
+<span class="r-in"><span><span class="co"># provided with the dataQCtools package</span></span></span>
+<span class="r-in"><span><span class="va">example_loc</span> <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_package.html" class="external-link">path_package</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"dataQCtools"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">base_loc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">example_loc</span>, <span class="st">"/data/2022_summer/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rawdata_loc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"1_raw_csv/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cropped_loc</span> <span class="op">=</span> <span class="va">base_loc</span></span></span>
+<span class="r-in"><span><span class="va">ldrtimes_fn</span> <span class="op">=</span> <span class="st">"LDRTimes_summer22.xlsx"</span></span></span>
+<span class="r-in"><span><span class="co"># first let's delete any files that are already there, so that if you</span></span></span>
+<span class="r-in"><span><span class="co"># have many files we start fresh and just process a few</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">cropped_loc</span>, <span class="st">"2_cropped_csv/*"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># now let's crop just three files for us to QC</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="crop_raw_data.html">crop_raw_data</a></span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span>, <span class="va">cropped_loc</span>, nfiles <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'/home/runner/work/_temp/Library/dataQCtools/extdata/data/2022_summer/2_cropped_csv' already exists</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'/home/runner/work/_temp/Library/dataQCtools/extdata/data/2022_summer/2_cropped_csv/2_cropped_plots' already exists</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 1 of 3: CedarLower_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 2 of 3: CedarUpper_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 3 of 3: ChalaatLower_water_sum_22.csv</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 189 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 189 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Done.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cropped_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"2_cropped_csv/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">qc_plots_loc</span> <span class="op">&lt;-</span> <span class="va">base_loc</span> <span class="co">#paste0(base_loc, "3_qc_plots/")</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get a list of all the cropped data files</span></span></span>
 <span class="r-in"><span><span class="va">filenames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">cropped_loc</span>, pattern<span class="op">=</span><span class="st">".csv"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># this is now a list of all filenames; we haven't read in the data yet, but</span></span></span>
 <span class="r-in"><span><span class="co"># make sure this lists all the cropped data files you want to plot:</span></span></span>
 <span class="r-in"><span><span class="va">filenames</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "CedarLower_water_sum_22_cropped.csv"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "CedarUpper_water_sum_22_cropped.csv"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "ChalaatLower_water_sum_22_cropped.csv"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># then make QC plots</span></span></span>
 <span class="r-in"><span><span class="fu">make_qc_plots_of_cropped_data</span><span class="op">(</span><span class="va">cropped_loc</span>, <span class="va">qc_plots_loc</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Reading in cropped data files..."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 1 of 3: CedarLower_water_sum_22_cropped.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 2 of 3: CedarUpper_water_sum_22_cropped.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 3 of 3: ChalaatLower_water_sum_22_cropped.csv</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Done reading in cropped data.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Computing temperature differences...</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in pivot_longer(., cols = dailymin_water:WaterRange, names_to = "calc",     values_to = "value"):</span> could not find function "pivot_longer"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Making QC plots for site 1 of 3: CedarLower</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Making QC plots for site 2 of 3: CedarUpper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Making QC plots for site 3 of 3: ChalaatLower</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Done.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
