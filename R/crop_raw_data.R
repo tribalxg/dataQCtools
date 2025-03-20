@@ -1,11 +1,3 @@
-# IMPORTANT: filenames must have format sitename_medium_deployseason_deployyear.csv
-#            e.g. NolanLower_air_sum_23.csv
-# Note:
-# if you get warning messages like the following, it's okay; it is just telling
-# you how many missing values you have
-#1: Removed 189 rows containing missing values or values outside the scale range (`geom_line()`).
-#2: Removed 189 rows containing missing values or values outside the scale range (`geom_point()`)
-
 #' Crop raw water/air temperature data from HOBO sensors
 #'
 #' @param rawdata_loc File path to the directory containing the raw data to be
@@ -54,8 +46,8 @@
 crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, nfiles = NULL){ #, croppedplots_loc){
   cropped_loc = paste0(cropped_loc, "2_cropped_csv/")
   croppedplots_loc = paste0(cropped_loc, "2_cropped_plots/")
-  dir.create(cropped_loc) #, showWarnings = FALSE)
-  dir.create(croppedplots_loc) #, showWarnings = FALSE)
+  dir.create(cropped_loc, showWarnings = FALSE)
+  dir.create(croppedplots_loc, showWarnings = FALSE)
 
   # get a list of all the temperature data filenames
   csv_files = list.files(path = rawdata_loc, pattern = '*csv')
@@ -152,8 +144,8 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, nfiles = NULL){ 
                                      ggplot2::aes(x = .data$datetime,
                                                   y = .data$temp,
                                                   color = .data$type)) +
-      ggplot2::geom_line() +
-      ggplot2::geom_point() +
+      ggplot2::geom_line(na.rm=TRUE) +
+      ggplot2::geom_point(na.rm=TRUE) +
       ggplot2::labs(title = paste0(" Raw versus Cropped data"),
            x = "Date", y = "Temperature (C)")+
       ggplot2::theme(axis.text = ggplot2::element_text(colour = "black", size = (12)))

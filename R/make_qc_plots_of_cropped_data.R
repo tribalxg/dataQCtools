@@ -45,7 +45,7 @@
 #'
 make_qc_plots_of_cropped_data = function(cropped_loc, qc_plots_loc){
   qc_plots_loc = paste0(qc_plots_loc, "3_qc_plots/")
-  dir.create(qc_plots_loc) #, showWarnings = FALSE)
+  dir.create(qc_plots_loc, showWarnings = FALSE)
 
   # Make list of file names to plot
   filenames <- list.files(path = cropped_loc, pattern=".csv")
@@ -141,8 +141,8 @@ make_qc_plots_of_cropped_data = function(cropped_loc, qc_plots_loc){
     rangeplot <- ggplot2::ggplot(this.site.combined %>%
                                    dplyr::filter(.data$calc %in% c("AirRange","WaterRange")),
                                  ggplot2::aes(x = .data$date, y = .data$value, color = .data$calc)) +
-      ggplot2::geom_line() +
-      ggplot2::geom_point() +
+      ggplot2::geom_line(na.rm=TRUE) +
+      ggplot2::geom_point(na.rm=TRUE) +
       ggplot2::labs(title = paste0(s," Air and Water Temperature ranges"),
            x = "Date", y = "Temperature (C)",
            color = "Media") +
@@ -155,7 +155,7 @@ make_qc_plots_of_cropped_data = function(cropped_loc, qc_plots_loc){
     maxdiffplot <- ggplot2::ggplot(this.site.combined %>%
                                      dplyr::filter(.data$calc %in% c("dailymax_air", "dailymax_water", "AWMaxDiff")),
                             ggplot2::aes(x = .data$date, y = .data$value, color = .data$calc)) +
-      ggplot2::geom_line() +
+      ggplot2::geom_line(na.rm=TRUE) +
       ggplot2::labs(title = paste0(s," Max Air and Water Temperature and Difference"),
            x = "Date", y = "Temperature (C)",
            color = "Media") +
