@@ -37,7 +37,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">crop_raw_data</span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span>, <span class="va">cropped_loc</span>, <span class="va">croppedplots_loc</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">crop_raw_data</span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span>, <span class="va">cropped_loc</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -55,49 +55,92 @@
 <dt id="arg-cropped-loc">cropped_loc<a class="anchor" aria-label="anchor" href="#arg-cropped-loc"></a></dt>
 <dd><p>File path to the directory where cropped data files will be written and stored.</p></dd>
 
-
-<dt id="arg-croppedplots-loc">croppedplots_loc<a class="anchor" aria-label="anchor" href="#arg-croppedplots-loc"></a></dt>
-<dd><p>File path to the directory where plots of cropped and raw data will be stored.</p></dd>
-
 </dl></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">base_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2022_summer/"</span></span></span>
-<span class="r-in"><span><span class="va">rawdata_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"1_raw_csv/"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">cropped_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"2_cropped_csv/"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">croppedplots_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"2_cropped_plots/"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ldrtimes_fn</span> <span class="op">&lt;-</span> <span class="st">"LDRTimes_summer22.xlsx"</span></span></span>
+<span class="r-in"><span><span class="co"># the following two lines of code are only necessary for the example data;</span></span></span>
+<span class="r-in"><span><span class="co"># for your own data, simply set base_loc to the base file path for your</span></span></span>
+<span class="r-in"><span><span class="co"># computer, e.g. base_loc = "data/2022_summer/"</span></span></span>
+<span class="r-in"><span><span class="va">example_loc</span> <span class="op">=</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_package.html" class="external-link">path_package</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"dataQCtools"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">base_loc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">example_loc</span>, <span class="st">"/data/2022_summer/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rawdata_loc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"1_raw_csv/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cropped_loc</span> <span class="op">=</span> <span class="va">base_loc</span></span></span>
+<span class="r-in"><span><span class="co">#cropped_loc = paste0(base_loc, "2_cropped_csv/")</span></span></span>
+<span class="r-in"><span><span class="co">#croppedplots_loc = paste0(base_loc, "2_cropped_plots/")</span></span></span>
+<span class="r-in"><span><span class="va">ldrtimes_fn</span> <span class="op">=</span> <span class="st">"LDRTimes_summer22.xlsx"</span></span></span>
 <span class="r-in"><span><span class="co"># check that R can find your raw data files</span></span></span>
 <span class="r-in"><span><span class="co"># Get a list of the filenames of all the raw data files you will be clipping</span></span></span>
 <span class="r-in"><span><span class="va">csv_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">rawdata_loc</span>, pattern <span class="op">=</span> <span class="st">'*csv'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># this is now a list of all filenames; we haven't read in the data yet, but</span></span></span>
 <span class="r-in"><span><span class="co"># make sure this lists all the raw files you want to crop:</span></span></span>
 <span class="r-in"><span><span class="va">csv_files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "CedarLower_water_sum_22.csv"     "CedarUpper_water_sum_22.csv"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "ChalaatLower_water_sum_22.csv"   "ChalaatUpper_water_sum_22.csv"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Cottonwood_water_sum_22.csv"     "CrippenSprings_water_sum_22.csv"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "EFIronMaiden_water_sum_22.csv"   "EFKalaloch_water_sum_22.csv"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "EastPole_water_sum_22.csv"       "ElkLower_water_sum_22.csv"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "ElkUpper_water_sum_22.csv"       "Fletcher_water_sum_22.csv"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "GoodmanLower_water_sum_22.csv"   "GoodmanUpper_water_sum_22.csv"  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># read in LDRTimes lookup table and take a look at it</span></span></span>
 <span class="r-in"><span><span class="va">ldrtimes</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `path` does not exist: ‘data/2022_summer/1_raw_csv/LDRTimes_summer22.xlsx’</span>
 <span class="r-in"><span><span class="va">ldrtimes</span> <span class="co"># or View(ldrtimes)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'ldrtimes' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 65 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    site          media latitude longitude unit_sn deploy_time        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Alder         water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-26 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> AndersonLower water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-13 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> AndersonUpper water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-27 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> BradenLower   water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-11 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> BradenUpper   water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-25 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> CanyonSprings water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-19 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> CedarLower    water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-20 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> CedarUpper    water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-25 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ChalaatLower  water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-13 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ChalaatUpper  water <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>      2022-05-11 <span style="color: #949494;">16:00:00</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 55 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: retrieval_time &lt;dttm&gt;, deploy_season &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   deploy_year &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># then crop the data!</span></span></span>
-<span class="r-in"><span><span class="fu">crop_raw_data</span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span>, <span class="va">cropped_loc</span>, <span class="va">croppedplots_loc</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `path` does not exist: ‘data/2022_summer/1_raw_csv/LDRTimes_summer22.xlsx’</span>
+<span class="r-in"><span><span class="fu">crop_raw_data</span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span>, <span class="va">cropped_loc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 1 of 14: CedarLower_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 2 of 14: CedarUpper_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 3 of 14: ChalaatLower_water_sum_22.csv</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 189 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 189 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 4 of 14: ChalaatUpper_water_sum_22.csv</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 2 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 2 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 5 of 14: Cottonwood_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 6 of 14: CrippenSprings_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 7 of 14: EFIronMaiden_water_sum_22.csv</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 277 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 277 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 8 of 14: EFKalaloch_water_sum_22.csv</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 93 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 93 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 9 of 14: EastPole_water_sum_22.csv</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 2585 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 2585 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_point()`).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 10 of 14: ElkLower_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 11 of 14: ElkUpper_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 12 of 14: Fletcher_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 13 of 14: GoodmanLower_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading file 14 of 14: GoodmanUpper_water_sum_22.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Done.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
