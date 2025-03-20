@@ -80,16 +80,21 @@ called group_wqs.csv</p></li>
 </ul><p>Example:</p><table class="table table"><tr><td>Group</td><td>FromDate</td><td>ToDate</td><td>WQS</td></tr><tr><td>1</td><td>01/01</td><td>12/31</td><td>15</td></tr><tr><td>2</td><td>01/01</td><td>02/14</td><td>12</td></tr><tr><td>2</td><td>02/15</td><td>07/01</td><td>16</td></tr><tr><td>2</td><td>07/02</td><td>12/31</td><td>12</td></tr></table></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A data frame with 7DADM and exceedances.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">fall_data_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2021_fall/4_final_data/"</span></span></span>
-<span class="r-in"><span><span class="va">sum_data_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2022_summer/4_final_data/"</span></span></span>
-<span class="r-in"><span><span class="va">lookup_loc</span> <span class="op">&lt;-</span> <span class="st">"lookup_tables/"</span></span></span>
+<span class="r-in"><span><span class="co">#library(magrittr)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">compute_7DADM_and_exceedance</span><span class="op">(</span><span class="va">fall_data_loc</span>, <span class="va">sum_data_loc</span>, <span class="va">lookup_loc</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in read_csv(paste0(lookup_loc, "site_group.csv")) %&gt;% filter_all(any_vars(!is.na(.))):</span> could not find function "%&gt;%"</span>
+<span class="r-in"><span><span class="co">#fall_data_loc &lt;- "data/2021_fall/4_final_data/"</span></span></span>
+<span class="r-in"><span><span class="co">#sum_data_loc &lt;- "data/2022_summer/4_final_data/"</span></span></span>
+<span class="r-in"><span><span class="co">#lookup_loc &lt;- "lookup_tables/"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#compute_7DADM_and_exceedance(fall_data_loc, sum_data_loc, lookup_loc)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
