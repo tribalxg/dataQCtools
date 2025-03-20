@@ -1,0 +1,14 @@
+---
+title: "Computing 7DADM and identifying site impairments"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(dataQCtools)
+```
