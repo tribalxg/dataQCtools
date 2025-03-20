@@ -11,22 +11,22 @@
 #' @param rawdata_loc File path to the directory containing the raw data to be cropped. The names of the raw data files must be in the format sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.
 #' @param ldrtimes_fn Filename for the LDRTimes file, the lookup table of deployment and retrieval times. This file is assumed to be in the same folder as the raw data.
 #' @param cropped_loc File path to the directory where cropped data files will be written and stored.
-#' @param croppedplots_loc File path to the directory where plots of cropped and raw data will be stored.
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-#' library(readxl)
-#' library(dplyr)
-#' library(ggplot2)
-#'
-#' base_loc <- "data/2022_summer/"
-#' rawdata_loc <- paste0(base_loc, "1_raw_csv/")
-#' cropped_loc <- paste0(base_loc, "2_cropped_csv/")
-#' croppedplots_loc <- paste0(base_loc, "2_cropped_plots/")
-#' ldrtimes_fn <- "LDRTimes_summer22.xlsx"
+#' # the following two lines of code are only necessary for the example data;
+#' # for your own data, simply set base_loc to the base file path for your
+#' # computer, e.g. base_loc = "data/2022_summer/"
+#' example_loc = fs::path_package("extdata", package = "dataQCtools")
+#' base_loc = paste0(example_loc, "/data/2022_summer/")
+#' rawdata_loc = paste0(base_loc, "1_raw_csv/")
+#' cropped_loc = base_loc
+#' #cropped_loc = paste0(base_loc, "2_cropped_csv/")
+#' #croppedplots_loc = paste0(base_loc, "2_cropped_plots/")
+#' ldrtimes_fn = "LDRTimes_summer22.xlsx"
 
 #' # check that R can find your raw data files
 #' # Get a list of the filenames of all the raw data files you will be clipping
@@ -40,14 +40,19 @@
 #' ldrtimes # or View(ldrtimes)
 #'
 #' # then crop the data!
-#' crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc)
+#' crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc)
 #'
-crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc){
+crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc){ #, croppedplots_loc){
+  cropped_loc = paste0(cropped_loc, "2_cropped_csv/")
+  croppedplots_loc = paste0(cropped_loc, "2_cropped_plots/")
+  dir.create(cropped_loc) #, showWarnings = FALSE)
+  dir.create(croppedplots_loc) #, showWarnings = FALSE)
+
   # get a list of all the temperature data filenames
   csv_files = list.files(path = rawdata_loc, pattern = '*csv')
   # read in LDR file
   # - this assumes the LDR file is an excel file in the folder indicated by rawdata_loc
-  ldrtimes = read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
+  ldrtimes = readxl::read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
 
   i = 0
   for(this.file in csv_files){
@@ -56,7 +61,7 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
     cat(paste0("Reading file ", i, " of ", length(csv_files), ": ", this.file), fill = TRUE)
 
     # extract metadata from the filename
-    filename.parts = strsplit(this.file, '[_.]')[[1]]
+    filename.parts = stringr::str_split_1(this.file, '[_.]')
     csv.site = filename.parts[1]
     csv.media = filename.parts[2]
     csv.season = filename.parts[3]
@@ -74,10 +79,10 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
                  col_select = 1:3, # read only the first three columns of data
                  col_names = FALSE, # don't try to name columns from a row of the file
                  show_col_types = FALSE) %>% # suppresses print message
-          dplyr::rename("row.num" = X1,
-                 "datetime" = X2,
-                 "temperature" = X3) %>%
-          dplyr::mutate(datetime = mdy_hms(datetime)) #for datetime in hh:mm:ss
+          dplyr::rename("row.num" = .data$X1,
+                 "datetime" = .data$X2,
+                 "temperature" = .data$X3) %>%
+          dplyr::mutate(datetime = lubridate::mdy_hms(.data$datetime)) #for datetime in hh:mm:ss
       },
       warning = function(cond) { #if datetime isn't in hh:mm:ss, will now try hh:mm format
         readr::read_csv(paste0(rawdata_loc, this.file),
@@ -85,10 +90,10 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
                  col_select = 1:3, # read only the first three columns of data
                  col_names = FALSE, # don't try to name columns from a row of the file
                  show_col_types = FALSE) %>% # suppresses print message
-          dplyr::rename("row.num" = X1,
-                 "datetime" = X2,
-                 "temperature" = X3) %>%
-          dplyr::mutate(datetime = mdy_hm(datetime)) #for datetime in hh:mm
+          dplyr::rename("row.num" = .data$X1,
+                 "datetime" = .data$X2,
+                 "temperature" = .data$X3) %>%
+          dplyr::mutate(datetime = lubridate::mdy_hm(.data$datetime)) #for datetime in hh:mm
       }
     )
 
@@ -97,10 +102,10 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
       # select the row(s) of ldrtimes that match this datafile
       # should be exactly one row, but if there are no rows or multiple rows that
       # match, this step will pull that many rows
-      dplyr::filter(site == csv.site, deploy_season == csv.season,
-             deploy_year == csv.year, media == csv.media) %>%
+      dplyr::filter(.data$site == csv.site, .data$deploy_season == csv.season,
+                    .data$deploy_year == csv.year, .data$media == csv.media) %>%
       # keep just the deploy_time and retrieval_time variables/columns
-      dplyr::select(deploy_time, retrieval_time)
+      dplyr::select(.data$deploy_time, .data$retrieval_time)
 
     if(nrow(deploy.retrieval) == 0){
       stop("no rows of ldrtimes matched this csv file.")
@@ -114,31 +119,37 @@ crop_raw_data = function(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc
 
     if(retrieval > deploy) {
       cropped.data = dplyr::filter(this.data,
-                            datetime > deploy,
-                            datetime < retrieval)
+                                   .data$datetime > deploy,
+                                   .data$datetime < retrieval)
 
     } # if(retrieval > deploy)
 
     # write cropped csv files to cropped folder
     readr::write_csv(cropped.data,
-              file=paste0(cropped_loc, str_split_i(this.file,"[.]",1),"_cropped.csv"))
+              file=paste0(cropped_loc,
+                          stringr::str_split_i(this.file, "[.]", 1), "_cropped.csv"))
 
     #Create a dataframe of the raw and cropped data
     cropvraw <- dplyr::left_join(this.data, cropped.data, by=c("row.num", "datetime")) %>%
-      rename(raw.temp=temperature.x, cropped.temp =temperature.y) %>%#rename temperature from each file
+      dplyr::rename(raw.temp = .data$temperature.x,
+                    cropped.temp = .data$temperature.y) %>%#rename temperature from each file
       #create new column of data type (raw or cropped for plotting in ggplot)
-      tidyr::pivot_longer(cols=raw.temp:cropped.temp, names_to="type", values_to="temp")
+      tidyr::pivot_longer(cols = .data$raw.temp:.data$cropped.temp,
+                          names_to="type", values_to="temp")
 
-    cropvraw.plot <- ggplot(cropvraw, aes(x=datetime, y=temp, color=type)) +
-      geom_line() +
-      geom_point() +
-      labs(title = paste0(" Raw versus Cropped data"),
+    cropvraw.plot <- ggplot2::ggplot(cropvraw,
+                                     ggplot2::aes(x = .data$datetime,
+                                                  y = .data$temp,
+                                                  color = .data$type)) +
+      ggplot2::geom_line() +
+      ggplot2::geom_point() +
+      ggplot2::labs(title = paste0(" Raw versus Cropped data"),
            x = "Date", y = "Temperature (C)")+
-      theme(axis.text = element_text(colour = "black", size = (12)))
+      ggplot2::theme(axis.text = ggplot2::element_text(colour = "black", size = (12)))
 
-    ggsave(paste0(croppedplots_loc, csv.site, "_rawvscroppeddata.png"), cropvraw.plot,
-           width = 11, height = 8.5, units = "in")
-
+    ggplot2::ggsave(paste0(croppedplots_loc, csv.site, "_rawvscroppeddata.png"),
+                    cropvraw.plot,
+                    width = 11, height = 8.5, units = "in")
   }
 
   cat("Done.", fill = TRUE)

@@ -4,7 +4,7 @@
 \alias{crop_raw_data}
 \title{Crop raw water/air temperature data from HOBO sensors}
 \usage{
-crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc)
+crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc)
 }
 \arguments{
 \item{rawdata_loc}{File path to the directory containing the raw data to be cropped. The names of the raw data files must be in the format sitename_medium_deployseason_deployyear.csv, e.g. NolanLower_air_sum_23.csv.}
@@ -12,23 +12,22 @@ crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc)
 \item{ldrtimes_fn}{Filename for the LDRTimes file, the lookup table of deployment and retrieval times. This file is assumed to be in the same folder as the raw data.}
 
 \item{cropped_loc}{File path to the directory where cropped data files will be written and stored.}
-
-\item{croppedplots_loc}{File path to the directory where plots of cropped and raw data will be stored.}
 }
 \description{
 Crop raw water/air temperature data from HOBO sensors
 }
 \examples{
 
-library(readxl)
-library(dplyr)
-library(ggplot2)
-
-base_loc <- "data/2022_summer/"
-rawdata_loc <- paste0(base_loc, "1_raw_csv/")
-cropped_loc <- paste0(base_loc, "2_cropped_csv/")
-croppedplots_loc <- paste0(base_loc, "2_cropped_plots/")
-ldrtimes_fn <- "LDRTimes_summer22.xlsx"
+# the following two lines of code are only necessary for the example data;
+# for your own data, simply set base_loc to the base file path for your
+# computer, e.g. base_loc = "data/2022_summer/"
+example_loc = fs::path_package("extdata", package = "dataQCtools")
+base_loc = paste0(example_loc, "/data/2022_summer/")
+rawdata_loc = paste0(base_loc, "1_raw_csv/")
+cropped_loc = base_loc
+#cropped_loc = paste0(base_loc, "2_cropped_csv/")
+#croppedplots_loc = paste0(base_loc, "2_cropped_plots/")
+ldrtimes_fn = "LDRTimes_summer22.xlsx"
 # check that R can find your raw data files
 # Get a list of the filenames of all the raw data files you will be clipping
 csv_files = list.files(path = rawdata_loc, pattern = '*csv')
@@ -41,6 +40,6 @@ ldrtimes = readxl::read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
 ldrtimes # or View(ldrtimes)
 
 # then crop the data!
-crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc, croppedplots_loc)
+crop_raw_data(rawdata_loc, ldrtimes_fn, cropped_loc)
 
 }

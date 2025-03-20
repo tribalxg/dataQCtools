@@ -12,6 +12,7 @@ RoxygenNote: 7.3.1
 Imports: 
     dplyr,
     flextable,
+    fs,
     ggplot2,
     ggthemes,
     grid,
@@ -22,8 +23,10 @@ Imports:
     RColorBrewer,
     readr,
     readxl,
+    rlang,
     runner,
     scales,
+    stringr,
     tidyr,
     zoo
 URL: https://tribalxg.github.io/dataQCtools/
