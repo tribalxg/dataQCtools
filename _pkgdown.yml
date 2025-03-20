@@ -3,9 +3,12 @@ template:
   bootstrap: 5
 
 articles:
-- title: Articles
-  navbar: ~
+- title: "Cropping data based on deployment and retrieval times"
   contents:
-  - articles/cropping.Rmd
-  - articles/qcplots.Rmd
-  - articles/7DADM_site_impairments.Rmd
+    - "articles/cropping"
+- title: "Making QC plots"
+  contents:
+    - "articles/qcplots"
+- title: "Computing 7DADM and identifying site impairments"
+  contents:
+    - "articles/7DADM_site_impairments"
