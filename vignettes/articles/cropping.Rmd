@@ -19,10 +19,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(dataQCtools)
-```
-
 ## Editable script
 
 <!-- this script crops raw data from HOBO files -->
@@ -213,5 +209,9 @@ cat("Done.", fill = TRUE)
 
 
 ## Demo of `crop_raw_data()`
+
+```{r setup}
+library(dataQCtools)
+```
 
 
