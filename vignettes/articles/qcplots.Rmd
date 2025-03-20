@@ -1,5 +1,15 @@
 ---
 title: "Making QC plots"
+output:
+  html_document:
+    theme: flatly
+    number_sections: true
+    highlighted: default 
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+    toc_depth: 3
 ---
 
 ```{r, include = FALSE}
@@ -8,6 +18,43 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+## Editable script
+
+Here is a script you can use if you would prefer to have all the code for the QC plot step in a single script rather than an installable package format. Just click the clipboard icon in the top right corner of this code chunk to copy the code, then open a new R script in RStudio and paste it there, and save the script wherever you would like to store it on your computer.
+
+```{r, eval = FALSE}
+# load necessary libraries
+library(zoo)
+library(grid)
+library(plotly)
+library(readxl)
+library(scales)
+library(runner) # for moving averages
+library(ggthemes) # for plotting
+library(tidyverse) # need for dplyr and ggplot2
+library(lubridate) # for handling dates
+library(gridExtra)
+library(flextable) # for making tables with conditional formatting, merged cells and more
+library(RColorBrewer)
+
+# directory containing cropped data to be plotted
+cropped_loc <- "data/2022_summer/2_cropped_csv/"
+# directory where QC plots will be stored
+qc_plots_loc <- "data/2022_summer/3_qc_plots/"
+
+# get a list of all the cropped files
+filenames <- list.files(path = cropped_loc, pattern=".csv")
+# this is now a list of all filenames; we haven't read in the data yet, but
+# make sure this lists all the cropped files you want to plot
+filenames
+
+# make QC plots!
+make_qc_plots_of_cropped_data(cropped_loc, qc_plots_loc)
+```
+
+
+## Demo of `crop_raw_data()`
 
 ```{r setup}
 library(dataQCtools)

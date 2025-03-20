@@ -58,7 +58,7 @@ knitr::opts_chunk$set(
 <!--   for an example of this) -->
 <!-- - make sure filepaths for folders always end in "/"! -->
 
-Here is a script you can use if you would prefer to have all the code in a single script rather than an installable package format. Just click the clipboard icon in the top right corner of this code chunk to copy the code, then open a new R script in RStudio and paste it there, and save the script wherever you would like to store it on your computer.
+Here is a script you can use if you would prefer to have all the cropping code in a single script rather than an installable package format. Just click the clipboard icon in the top right corner of this code chunk to copy the code, then open a new R script in RStudio and paste it there, and save the script wherever you would like to store it on your computer.
 
 ```{r, eval = FALSE}
 # load necessary libraries
