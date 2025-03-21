@@ -51,8 +51,6 @@
 </nav><div class="container template-article">
 
 
-
-
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
@@ -65,8 +63,9 @@
 
     
     
-<div class="section level2">
-<h2 id="editable-script">Editable script<a class="anchor" aria-label="anchor" href="#editable-script"></a>
+<div class="section level2" number="0.1">
+<h2 id="editable-script">
+<span class="header-section-number">0.1</span> Editable script<a class="anchor" aria-label="anchor" href="#editable-script"></a>
 </h2>
 <p>Here is a script you can use if you would prefer to have all the code
 for the 7DADM and site impairment steps in a single script rather than
@@ -74,11 +73,195 @@ an installable package format. Just click the clipboard icon in the top
 right corner of this code chunk to copy the code, then open a new R
 script in RStudio and paste it there, and save the script wherever you
 would like to store it on your computer.</p>
-</div>
-<div class="section level2">
-<h2 id="demo-using-dataqctools">Demo using <code>dataQCtools</code><a class="anchor" aria-label="anchor" href="#demo-using-dataqctools"></a>
-</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load necessary libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># to handle data from a new water year, just change these file paths</span></span>
+<span><span class="va">fall_data_loc</span> <span class="op">=</span> <span class="st">"data/2021_fall/4_final_csv/"</span></span>
+<span><span class="va">sum_data_loc</span> <span class="op">=</span> <span class="st">"data/2022_summer/4_final_csv/"</span></span>
+<span><span class="va">lookup_loc</span> <span class="op">=</span> <span class="st">"lookup_tables/"</span></span>
+<span></span>
+<span><span class="co"># read in site-group lookup table</span></span>
+<span><span class="co"># - For each site, which WQS group is it in?</span></span>
+<span><span class="va">site_group</span> <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">lookup_loc</span>, <span class="st">"site_group.csv"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># removes any completely empty rows (in case this data frame is written</span></span>
+<span>  <span class="co"># in Excel in the future and Excel adds extra empty lines)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">any_vars</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># read in group-WQS lookup table</span></span>
+<span><span class="co"># - For each group, how does the WQS change over the water year?</span></span>
+<span><span class="va">group_wqs</span> <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">lookup_loc</span>, <span class="st">"group_wqs.csv"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># removes any completely empty rows (in case this data frame is written</span></span>
+<span>  <span class="co"># in Excel in the future and Excel adds extra empty lines)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter_all.html" class="external-link">filter_all</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/all_vars.html" class="external-link">any_vars</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># read in quality-controlled data ----------------------</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Reading in QC'd data..."</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># assumes all data files are csv format, not xls or xlsx</span></span>
+<span><span class="co"># read in fall deployment files</span></span>
+<span><span class="co"># fall filename format: "AndersonLower_2022_fall_FINAL.csv"</span></span>
+<span><span class="va">data_files_fall</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">fall_data_loc</span>, pattern <span class="op">=</span> <span class="st">'*csv'</span><span class="op">)</span></span>
+<span><span class="co"># read in summer deployment files</span></span>
+<span><span class="co"># summer filename format: "AndersonLower_2023_sum_FINAL.csv"</span></span>
+<span><span class="va">data_files_sum</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">sum_data_loc</span>, pattern <span class="op">=</span> <span class="st">'*csv'</span><span class="op">)</span></span>
+<span><span class="co"># combine fall and summer filenames into one list so we just need one loop</span></span>
+<span><span class="va">data_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">data_files_fall</span>, <span class="va">data_files_sum</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># loop through each file, read it in, process it</span></span>
+<span><span class="va">all_data</span> <span class="op">&lt;-</span><span class="cn">NULL</span> <span class="co"># Create new data frame to hold combined data</span></span>
+<span></span>
+<span><span class="va">file_no</span> <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="kw">for</span><span class="op">(</span><span class="va">this_file</span> <span class="kw">in</span> <span class="va">data_files</span><span class="op">)</span><span class="op">{</span> <span class="co"># for each file,</span></span>
+<span>  <span class="co"># update file_no counter</span></span>
+<span>  <span class="va">file_no</span> <span class="op">=</span> <span class="va">file_no</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>  <span class="co">#this_file = data_files[51] # uncomment to troubleshoot within loop</span></span>
+<span></span>
+<span>  <span class="co"># extract metadata (sitename and deployment season) from filename</span></span>
+<span>  <span class="va">filename_parts</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit</a></span><span class="op">(</span><span class="va">this_file</span>, <span class="st">'[_.]'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">sitename</span> <span class="op">=</span> <span class="va">filename_parts</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span>  <span class="va">deploy_season</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">filename_parts</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>, <span class="va">filename_parts</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># all the fall files are first in the list, so we can use this to tell</span></span>
+<span>  <span class="co"># from file_no whether the current file is a summer or fall deployment</span></span>
+<span>  <span class="co"># and that tells us in which directory we can find this file</span></span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="va">file_no</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">data_files_fall</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="va">file_dir</span> <span class="op">=</span> <span class="va">sum_data_loc</span></span>
+<span>  <span class="op">}</span><span class="kw">else</span><span class="op">{</span></span>
+<span>    <span class="va">file_dir</span> <span class="op">=</span> <span class="va">fall_data_loc</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="co"># read in the data (this_file) from the right directory (file_dir)</span></span>
+<span>  <span class="va">this_data</span> <span class="op">=</span> <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">file_dir</span>, <span class="va">this_file</span><span class="op">)</span>,</span>
+<span>                              skip <span class="op">=</span> <span class="fl">1</span>, <span class="co"># skip header line</span></span>
+<span>                              <span class="co"># the only columns we really need are 2, 3, 10, and 13,</span></span>
+<span>                              <span class="co"># (date, time, water temp, and the QC indicator UseForCalc)</span></span>
+<span>                              <span class="co"># but we can keep them all for reference</span></span>
+<span>                              col_select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">10</span>, <span class="fl">13</span><span class="op">)</span>, <span class="co"># read only the four columns of data we need</span></span>
+<span>                              col_names <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># don't try to name columns from a row of the file</span></span>
+<span>                              show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># suppresses print message</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># get rid of annoying attribute information</span></span>
+<span>    <span class="co"># the next several lines</span></span>
+<span>    <span class="co"># convert the character-format datetime to an R POSIXct object</span></span>
+<span>    <span class="co"># ymd_hms is the format the character string is in initially; it tells R</span></span>
+<span>    <span class="co"># how to read and interpret the character string</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>      StartDate <span class="op">=</span> <span class="va">X2</span>,</span>
+<span>      StartTime <span class="op">=</span> <span class="va">X3</span>,</span>
+<span>      WaterTemp <span class="op">=</span> <span class="va">X10</span>,</span>
+<span>      UseForCalc <span class="op">=</span> <span class="va">X13</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>      StartDate <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html" class="external-link">mdy</a></span><span class="op">(</span><span class="va">StartDate</span><span class="op">)</span>,</span>
+<span>      StartTime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">StartTime</span><span class="op">)</span>,</span>
+<span>      SiteName <span class="op">=</span> <span class="va">sitename</span>,</span>
+<span>      DeploySeason <span class="op">=</span> <span class="va">deploy_season</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">StartDate</span>, <span class="va">StartTime</span>, <span class="st">" "</span><span class="op">)</span>,</span>
+<span>      format <span class="op">=</span> <span class="st">"%Y-%m-%d %H:%M:%S"</span>,</span>
+<span>      tz <span class="op">=</span> <span class="st">"America/Los_Angeles"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Date <span class="op">=</span> <span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">datetime</span>, format <span class="op">=</span> <span class="st">"%Y-%m-%d"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="co"># keep only the data with UseForCalc = 1 (data that passed QC)</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">UseForCalc</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># add this file's data to the combined data frame</span></span>
+<span>  <span class="va">all_data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">all_data</span>, <span class="va">this_data</span><span class="op">)</span></span>
+<span>  <span class="co"># print some basic info to the R Console to update us on what was read in</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">" - Site "</span>, <span class="va">sitename</span>, <span class="st">" Deployment "</span>, <span class="va">deploy_season</span>,</span>
+<span>             <span class="st">" Dates "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">this_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span>, <span class="st">" to "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">this_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">}</span> <span class="co"># end for-loop</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Done reading in QC'd data."</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># compute 7DADM for this data ---------------------------</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Computing 7DADM..."</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">temp_stats</span> <span class="op">=</span> <span class="va">all_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># compute daily max water temp by site and date</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span><span class="op">)</span>  <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># summarize(DailyMax = max(WaterTemp, na.rm = TRUE),</span></span>
+<span>  <span class="co">#           DailyMin = min(WaterTemp, na.rm = TRUE),</span></span>
+<span>  <span class="co">#           DailyMean = mean(WaterTemp, na.rm = TRUE)) %&gt;%</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>DailyMax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">WaterTemp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">'drop'</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># summarize(DailyMax = max(WaterTemp, na.rm = TRUE), .groups = "drop_last") %&gt;%</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># add in any missing SiteName-Date combinations so we can tell which data is</span></span>
+<span>  <span class="co"># for consecutive dates</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">right_join</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>SiteName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">SiteName</span><span class="op">)</span>,</span>
+<span>                                              each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>                               Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                                          <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">SiteName</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                    by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># sort by SiteName first, then by Date within SiteName</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="co"># compute 7DADM</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SiteName</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>sevenDADM <span class="op">=</span> <span class="fu">runner</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/runner/man/mean_run.html" class="external-link">mean_run</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">DailyMax</span>,</span>
+<span>                                             k <span class="op">=</span> <span class="fl">7</span>, lag <span class="op">=</span> <span class="op">-</span><span class="fl">3</span>,</span>
+<span>                                             idx <span class="op">=</span> <span class="va">Date</span>,</span>
+<span>                                             na_pad <span class="op">=</span> <span class="cn">TRUE</span>, na_rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Done computing 7DADM."</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># use site-group lookup table to determine which WQS group each site is in -----</span></span>
+<span></span>
+<span><span class="va">temp_stats</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">temp_stats</span>, <span class="va">site_group</span>,</span>
+<span>                              by <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">SiteName</span> <span class="op">==</span> <span class="va">site</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># use group-WQS lookup table to determine what the WQS is for each group ------</span></span>
+<span><span class="co"># over the course of the water year, and determine when exceedances happen</span></span>
+<span><span class="co"># match_group_to_WQS(group_wqs)</span></span>
+<span><span class="va">temp_stats</span> <span class="op">=</span> <span class="va">temp_stats</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu">base</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">Date</span><span class="op">)</span>, <span class="st">"%m/%d"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">group_wqs</span>, by <span class="op">=</span> <span class="st">"grp_type"</span>, relationship <span class="op">=</span> <span class="st">"many-to-many"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>dates_match <span class="op">=</span> <span class="op">(</span><span class="va">Day</span> <span class="op">&gt;</span> <span class="va">start_date</span> <span class="op">&amp;</span> <span class="va">Day</span> <span class="op">&lt;</span> <span class="va">end_date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">dates_match</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>WQS <span class="op">=</span> <span class="va">wqs</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span>, <span class="va">Day</span>, <span class="va">sevenDADM</span>, <span class="va">WQS</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Exceedance <span class="op">=</span> <span class="op">(</span><span class="va">sevenDADM</span> <span class="op">&gt;</span> <span class="va">WQS</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># generate the desired site impairment table ---------------------</span></span>
+<span><span class="co"># site_impairments = site_impairments_table(wq_data)</span></span>
+<span></span>
+<span><span class="va">site_impairments</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  Site <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  Impaired <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  Dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># format Dates to have date ranges for consecutive dates,</span></span>
+<span><span class="co"># e.g. 7/18-7/20 instead of 7-18, 7-19, 7-20</span></span>
+<span><span class="kw">for</span><span class="op">(</span><span class="va">site</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">temp_stats</span><span class="op">$</span><span class="va">SiteName</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="co"># cat(site, fill = TRUE)</span></span>
+<span>  <span class="va">exceedance_dates</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">temp_stats</span>, <span class="va">SiteName</span> <span class="op">==</span> <span class="va">site</span>, <span class="va">Exceedance</span><span class="op">)</span><span class="op">$</span><span class="va">Date</span></span>
+<span>  <span class="va">diffs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">exceedance_dates</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diffs</span><span class="op">)</span> <span class="op">&gt;=</span><span class="fl">1</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">diffs</span><span class="op">&gt;</span><span class="fl">7</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="co"># cat(site, fill = TRUE)</span></span>
+<span>    <span class="va">consec_dates</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">exceedance_dates</span>, <span class="st">"%m/%d"</span><span class="op">)</span>,</span>
+<span>                         <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">exceedance_dates</span><span class="op">)</span> <span class="op">!=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">date_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">consec_dates</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">x</span>, n<span class="op">=</span><span class="fl">1</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">site_impairments</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span><span class="va">site_impairments</span>,</span>
+<span>                                      Site <span class="op">=</span> <span class="va">site</span>,</span>
+<span>                                      Impaired <span class="op">=</span> <span class="st">"Yes"</span>,</span>
+<span>                                      Dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">date_list</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="co"># cat(site, fill = TRUE)</span></span>
+<span>    <span class="va">site_impairments</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span><span class="va">site_impairments</span>,</span>
+<span>                                      Site <span class="op">=</span> <span class="va">site</span>,</span>
+<span>                                      Impaired <span class="op">=</span> <span class="st">"No"</span>,</span>
+<span>                                      Dates <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="section level2" number="0.2">
+<h2 id="demo-using-dataqctools">
+<span class="header-section-number">0.2</span> Demo using
+<code>dataQCtools</code><a class="anchor" aria-label="anchor" href="#demo-using-dataqctools"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tribalxg.github.io/dataQCtools/">dataQCtools</a></span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
