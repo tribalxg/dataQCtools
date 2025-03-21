@@ -30,6 +30,7 @@ Here is a script you can use if you would prefer to have all the code for the 7D
 # load necessary libraries
 library(readr)
 library(dplyr)
+library(runner)
 library(lubridate)
 
 # to handle data from a new water year, just change these file paths
