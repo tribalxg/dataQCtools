@@ -11,25 +11,18 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports: 
     dplyr,
-    flextable,
     fs,
     ggplot2,
-    ggthemes,
-    grid,
-    gridExtra,
     htmlwidgets,
     lubridate,
     magrittr,
     plotly,
-    RColorBrewer,
     readr,
     readxl,
     rlang,
     runner,
-    scales,
     stringr,
     tidyr,
-    utils,
-    zoo
+    utils
 URL: https://tribalxg.github.io/dataQCtools/
 Config/Needs/website: rmarkdown

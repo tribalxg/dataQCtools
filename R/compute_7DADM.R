@@ -24,18 +24,14 @@ compute_7DADM = function(all_data){
   temp_stats = all_data %>%
     # compute daily max water temp by site and date
     dplyr::group_by(.data$SiteName, .data$Date)  %>%
-    # summarize(DailyMax = max(WaterTemp, na.rm = TRUE),
-    #           DailyMin = min(WaterTemp, na.rm = TRUE),
-    #           DailyMean = mean(WaterTemp, na.rm = TRUE)) %>%
-    dplyr::summarize(DailyMax = max(.data$WaterTemp, na.rm = TRUE)) %>%
-    # summarize(DailyMax = max(WaterTemp, na.rm = TRUE), .groups = "drop_last") %>%
-    dplyr::ungroup() %>%
+    dplyr::summarize(DailyMax = max(.data$WaterTemp, na.rm = TRUE), .groups = 'drop') %>%
     # add in any missing SiteName-Date combinations so we can tell which data is
     # for consecutive dates
     dplyr::right_join(data.frame(SiteName = rep(unique(all_data$SiteName),
                                          each = as.integer(max(all_data$Date)-min(all_data$Date))+1),
                           Date = rep(seq(min(all_data$Date), max(all_data$Date), 1),
-                                     dplyr::n_distinct(all_data$SiteName)))) %>%
+                                     dplyr::n_distinct(all_data$SiteName))),
+                      by = dplyr::join_by(.data$SiteName, .data$Date)) %>%
     # sort by SiteName first, then by Date within SiteName
     dplyr::arrange(.data$SiteName, .data$Date) %>%
     # compute 7DADM

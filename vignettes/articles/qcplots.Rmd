@@ -20,6 +20,18 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{css, echo = FALSE}
+/* https://bookdown.org/yihui/rmarkdown-cookbook/html-scroll.html */
+pre {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
 ## Editable script
 
 Here is a script you can use if you would prefer to have all the code for the QC plot step in a single script rather than an installable package format. Just click the clipboard icon in the top right corner of this code chunk to copy the code, then open a new R script in RStudio and paste it there, and save the script wherever you would like to store it on your computer.
@@ -168,6 +180,8 @@ for(s in sites){
 
 
 ## Demo using `dataQCtools::make_qc_plots_of_cropped_data()`
+
+In development
 
 ```{r setup}
 library(dataQCtools)

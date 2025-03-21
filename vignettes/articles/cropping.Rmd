@@ -20,6 +20,18 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{css, echo = FALSE}
+/* https://bookdown.org/yihui/rmarkdown-cookbook/html-scroll.html */
+pre {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
 ## Editable script
 
 <!-- this script crops raw data from HOBO files -->
@@ -208,11 +220,9 @@ for(this.file in csv_files){
 
 ## Demo using `dataQCtools::crop_raw_data()`
 
+In development
+
 ```{r setup}
 library(dataQCtools)
-```
-
-```{r, class.output="scroll-100"}
-
 ```
 

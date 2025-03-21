@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{css, echo = FALSE}
+/* https://bookdown.org/yihui/rmarkdown-cookbook/html-scroll.html */
 pre {
   max-height: 300px;
   overflow-y: auto;
@@ -27,12 +28,6 @@ pre {
 
 pre[class] {
   max-height: 200px;
-}
-
-.scroll-100 {
-  max-height: 200px;
-  overflow-y: auto;
-  background-color: inherit;
 }
 ```
 
@@ -44,7 +39,6 @@ Here is a script you can use if you would prefer to have all the code for the 7D
 # load necessary libraries
 library(readr)
 library(dplyr)
-library(runner)
 library(lubridate)
 
 # to handle data from a new water year, just change these file paths
@@ -86,7 +80,7 @@ file_no = 0
 for(this_file in data_files){ # for each file,
   # update file_no counter
   file_no = file_no + 1
-  #this_file = data_files[51] # uncomment to troubleshoot within loop
+  #this_file = data_files[1] # uncomment to troubleshoot within loop
 
   # extract metadata (sitename and deployment season) from filename
   filename_parts = strsplit(this_file, '[_.]')[[1]]
@@ -112,8 +106,7 @@ for(this_file in data_files){ # for each file,
                               col_names = FALSE, # don't try to name columns from a row of the file
                               show_col_types = FALSE) %>% # suppresses print message
     data.frame() %>% # get rid of annoying attribute information
-    # the next several lines
-    # convert the character-format datetime to an R POSIXct object
+    # the next several lines convert the character-format datetime to an R POSIXct object
     # ymd_hms is the format the character string is in initially; it tells R
     # how to read and interpret the character string
     dplyr::rename(
@@ -149,19 +142,14 @@ cat("Computing 7DADM...", fill = TRUE)
 temp_stats = all_data %>%
   # compute daily max water temp by site and date
   dplyr::group_by(SiteName, Date)  %>%
-  # summarize(DailyMax = max(WaterTemp, na.rm = TRUE),
-  #           DailyMin = min(WaterTemp, na.rm = TRUE),
-  #           DailyMean = mean(WaterTemp, na.rm = TRUE)) %>%
   dplyr::summarize(DailyMax = max(WaterTemp, na.rm = TRUE), .groups = 'drop') %>%
-  # summarize(DailyMax = max(WaterTemp, na.rm = TRUE), .groups = "drop_last") %>%
-  dplyr::ungroup() %>%
   # add in any missing SiteName-Date combinations so we can tell which data is
   # for consecutive dates
   dplyr::right_join(data.frame(SiteName = rep(unique(all_data$SiteName),
                                               each = as.integer(max(all_data$Date)-min(all_data$Date))+1),
                                Date = rep(seq(min(all_data$Date), max(all_data$Date), 1),
                                           dplyr::n_distinct(all_data$SiteName))),
-                    by = join_by(SiteName, Date)) %>%
+                    by = dplyr::join_by(SiteName, Date)) %>%
   # sort by SiteName first, then by Date within SiteName
   dplyr::arrange(SiteName, Date) %>%
   # compute 7DADM
@@ -192,7 +180,7 @@ temp_stats = temp_stats %>%
   dplyr::mutate(Exceedance = (sevenDADM > WQS))
 
 
-# generate the desired site impairment table ---------------------
+# generate a table of site impairments ---------------------
 # site_impairments = site_impairments_table(wq_data)
 
 site_impairments = data.frame(
@@ -227,6 +215,8 @@ for(site in unique(temp_stats$SiteName)){
 
 
 ## Demo using `dataQCtools`
+
+In development
 
 ```{r setup}
 library(dataQCtools)
