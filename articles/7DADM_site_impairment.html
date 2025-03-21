@@ -66,6 +66,7 @@
     
     
 <style type="text/css">
+/* https://bookdown.org/yihui/rmarkdown-cookbook/html-scroll.html */
 pre {
   max-height: 300px;
   overflow-y: auto;
@@ -73,12 +74,6 @@ pre {
 
 pre[class] {
   max-height: 200px;
-}
-
-.scroll-100 {
-  max-height: 200px;
-  overflow-y: auto;
-  background-color: inherit;
 }
 </style>
 <div class="section level2">
@@ -94,7 +89,6 @@ would like to store it on your computer.</p>
 <code class="sourceCode R"><span><span class="co"># load necessary libraries</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">runner</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># to handle data from a new water year, just change these file paths</span></span>
@@ -136,7 +130,7 @@ would like to store it on your computer.</p>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">this_file</span> <span class="kw">in</span> <span class="va">data_files</span><span class="op">)</span><span class="op">{</span> <span class="co"># for each file,</span></span>
 <span>  <span class="co"># update file_no counter</span></span>
 <span>  <span class="va">file_no</span> <span class="op">=</span> <span class="va">file_no</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span>  <span class="co">#this_file = data_files[51] # uncomment to troubleshoot within loop</span></span>
+<span>  <span class="co">#this_file = data_files[1] # uncomment to troubleshoot within loop</span></span>
 <span></span>
 <span>  <span class="co"># extract metadata (sitename and deployment season) from filename</span></span>
 <span>  <span class="va">filename_parts</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit</a></span><span class="op">(</span><span class="va">this_file</span>, <span class="st">'[_.]'</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
@@ -162,8 +156,7 @@ would like to store it on your computer.</p>
 <span>                              col_names <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># don't try to name columns from a row of the file</span></span>
 <span>                              show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># suppresses print message</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># get rid of annoying attribute information</span></span>
-<span>    <span class="co"># the next several lines</span></span>
-<span>    <span class="co"># convert the character-format datetime to an R POSIXct object</span></span>
+<span>    <span class="co"># the next several lines convert the character-format datetime to an R POSIXct object</span></span>
 <span>    <span class="co"># ymd_hms is the format the character string is in initially; it tells R</span></span>
 <span>    <span class="co"># how to read and interpret the character string</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
@@ -199,19 +192,14 @@ would like to store it on your computer.</p>
 <span><span class="va">temp_stats</span> <span class="op">=</span> <span class="va">all_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># compute daily max water temp by site and date</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span><span class="op">)</span>  <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="co"># summarize(DailyMax = max(WaterTemp, na.rm = TRUE),</span></span>
-<span>  <span class="co">#           DailyMin = min(WaterTemp, na.rm = TRUE),</span></span>
-<span>  <span class="co">#           DailyMean = mean(WaterTemp, na.rm = TRUE)) %&gt;%</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>DailyMax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">WaterTemp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">'drop'</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="co"># summarize(DailyMax = max(WaterTemp, na.rm = TRUE), .groups = "drop_last") %&gt;%</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># add in any missing SiteName-Date combinations so we can tell which data is</span></span>
 <span>  <span class="co"># for consecutive dates</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">right_join</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>SiteName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">SiteName</span><span class="op">)</span>,</span>
 <span>                                              each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>                               Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">Date</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>                                          <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">all_data</span><span class="op">$</span><span class="va">SiteName</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                    by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>                    by <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># sort by SiteName first, then by Date within SiteName</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">SiteName</span>, <span class="va">Date</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="co"># compute 7DADM</span></span>
@@ -242,7 +230,7 @@ would like to store it on your computer.</p>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Exceedance <span class="op">=</span> <span class="op">(</span><span class="va">sevenDADM</span> <span class="op">&gt;</span> <span class="va">WQS</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="co"># generate the desired site impairment table ---------------------</span></span>
+<span><span class="co"># generate a table of site impairments ---------------------</span></span>
 <span><span class="co"># site_impairments = site_impairments_table(wq_data)</span></span>
 <span></span>
 <span><span class="va">site_impairments</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -277,6 +265,7 @@ would like to store it on your computer.</p>
 <div class="section level2">
 <h2 id="demo-using-dataqctools">Demo using <code>dataQCtools</code><a class="anchor" aria-label="anchor" href="#demo-using-dataqctools"></a>
 </h2>
+<p>In development</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tribalxg.github.io/dataQCtools/">dataQCtools</a></span><span class="op">)</span></span></code></pre></div>
 </div>
