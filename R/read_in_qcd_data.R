@@ -17,7 +17,7 @@
 #'
 #' @examples
 read_in_qcd_data = function(fall_data_loc, sum_data_loc){
-  print("Reading in QC'd data...")
+  cat("Reading in QC'd data...", fill = TRUE)
   # assumes all data files are csv format, not xls or xlsx
   # read in fall deployment files
   # fall filename format: "AndersonLower_2022_fall_FINAL.csv"
@@ -86,9 +86,10 @@ read_in_qcd_data = function(fall_data_loc, sum_data_loc){
     # add this file's data to the combined data frame
     all_data <- dplyr::bind_rows(all_data, this_data)
     # print some basic info to the R Console to update us on what was read in
-    print(paste0(" - Site ", sitename, " Deployment ", deploy_season,
-                 " Dates ", min(this_data$Date), " to ", max(this_data$Date)))
+    cat(paste0(" - Site ", sitename, " Deployment ", deploy_season,
+               " Dates ", min(this_data$Date), " to ", max(this_data$Date)),
+        fill = TRUE)
   } # end for-loop
-  print("Done reading in QC'd data.")
+  cat("Done reading in QC'd data.", fill = TRUE)
   return(all_data)
 }

@@ -29,16 +29,16 @@ site_impairments_table = function(wq_data){
     Impaired = character(),
     Dates = character())
 
-  print(unique(wq_data$SiteName))
+  cat(unique(wq_data$SiteName), fill = TRUE)
 
   # format Dates to have date ranges for consecutive dates,
   # e.g. 7/18-7/20 instead of 7-18, 7-19, 7-20
   for(site in unique(wq_data$SiteName)){
+    # cat(site, fill = TRUE)
     exceedance_dates = dplyr::filter(wq_data, .data$SiteName == site, .data$Exceedance)$Date
     diffs = diff(exceedance_dates)
-    print(site)
     if(length(diffs) >=1 & sum(diffs>7) > 0){
-      print(site)
+      # cat(site, fill = TRUE)
       consec_dates = split(format(exceedance_dates, "%m/%d"),
                            cumsum(c(1, diff(exceedance_dates) != 1)))
       date_list = sapply(consec_dates, function(x) paste(x[1], tail(x, n=1), sep = "-"))
@@ -47,7 +47,7 @@ site_impairments_table = function(wq_data){
                                         Impaired = "Yes",
                                         Dates = paste(date_list, collapse = ", "))
     } else {
-      print(site)
+      # cat(site, fill = TRUE)
       site_impairments = dplyr::add_row(site_impairments,
                                         Site = site,
                                         Impaired = "No",

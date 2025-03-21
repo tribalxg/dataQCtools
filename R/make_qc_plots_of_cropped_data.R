@@ -53,7 +53,7 @@ make_qc_plots_of_cropped_data = function(cropped_loc, qc_plots_loc){
   # Loop to read all the data files and combine them into one datafile for easier plotting
   Combined <-NULL # Create new data frame to hold combined data
 
-  print("Reading in cropped data files...")
+  cat("Reading in cropped data files...", fill = TRUE)
   i = 0
   for (selection in filenames) {
     i = i+1

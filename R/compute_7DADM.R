@@ -15,7 +15,7 @@
 #'
 #' @examples
 compute_7DADM = function(all_data){
-  print("Computing 7DADM...")
+  cat("Computing 7DADM...", fill = TRUE)
   temp_stats = all_data %>%
     # compute daily max water temp by site and date
     dplyr::group_by(.data$SiteName, .data$Date)  %>%
@@ -41,6 +41,6 @@ compute_7DADM = function(all_data){
                                        na_pad = TRUE, na_rm = FALSE)) %>%
     dplyr::ungroup()
 
-  print("Done computing 7DADM.")
+  cat("Done computing 7DADM.", fill = TRUE)
   return(temp_stats)
 }
