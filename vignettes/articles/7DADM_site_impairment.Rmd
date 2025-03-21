@@ -2,6 +2,7 @@
 title: "Computing 7DADM and identifying site impairments"
 output:
   html_document:
+    css: "article.css"
     theme: flatly
     number_sections: true
     highlighted: default 
@@ -24,62 +25,11 @@ knitr::opts_chunk$set(
 Here is a script you can use if you would prefer to have all the code for the 7DADM and site impairment steps in a single script rather than an installable package format. Just click the clipboard icon in the top right corner of this code chunk to copy the code, then open a new R script in RStudio and paste it there, and save the script wherever you would like to store it on your computer.
 
 ```{r, eval = FALSE}
-# load necessary libraries
-library(zoo)
-library(grid)
-library(plotly)
-library(readxl)
-library(scales)
-library(runner) # for moving averages
-library(ggthemes) # for plotting
-library(tidyverse) # need for dplyr and ggplot2
-library(lubridate) # for handling dates
-library(gridExtra)
-library(flextable) # for making tables with conditional formatting, merged cells and more
-library(RColorBrewer)
 
-# all packages needed for dataQCfunctions.R are loaded in that script,
-# but this script also uses the magrittr pipe (%!>%), so we load that here
-library(magrittr)
-
-# to handle data from a new water year, just change these file paths
-fall_data_loc <- "data/2022_summer/4_final_data/"
-sum_data_loc <- "data/2022_summer/4_final_data/"
-
-# read in site-group lookup table
-# - For each site, which WQS group is it in?
-site_group = read_csv("site_group.csv") %>% 
-  # removes any completely empty rows
-  filter_all(any_vars(!is.na(.)))
-
-# # uncomment next line of code to write group_wqs to file;
-# # first edit the write_group_wqs() function in watertemp_functions.R
-# # if you want to update the group_wqs table
-# write_group_wqs(base_loc)
-
-# read in group-WQS lookup table
-# - For each group, how does the WQS change over the water year?
-group_wqs = read_csv("group_wqs.csv") %>%
-  # removes any completely empty rows (in case this data frame is written 
-  # in Excel in the future and Excel adds extra empty lines)
-  filter_all(any_vars(!is.na(.)))
-
-# read in quality-controlled data...
-wq_data = read_in_qcd_data(fall_data_loc, sum_data_loc) %!>%
-  # compute 7DADM for this data
-  compute_7DADM() %!>%
-  # use site-group lookup table to determine which WQS group each site is in
-  match_sites_to_WQS_groups(site_group) %!>%
-  # use group-WQS lookup table to determine what the WQS is for each group
-  # over the course of the water year, and determine when exceedances happen
-  match_group_to_WQS(group_wqs)
-
-# generate the desired site impairment table
-site_impairments = site_impairments_table(wq_data)
 ```
 
 
-## Demo of `crop_raw_data()`
+## Demo using `dataQCtools`
 
 ```{r setup}
 library(dataQCtools)

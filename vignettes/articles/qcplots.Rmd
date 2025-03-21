@@ -2,6 +2,7 @@
 title: "Making QC plots"
 output:
   html_document:
+    css: "article.css"
     theme: flatly
     number_sections: true
     highlighted: default 
