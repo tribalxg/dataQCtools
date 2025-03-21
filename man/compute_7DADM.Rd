@@ -12,7 +12,13 @@ compute_7DADM(all_data)
 read_in_qcd_data().}
 }
 \value{
-A data frame including the newly calculated 7DADM values.
+A data frame with the following four columns:
+\itemize{
+\item SiteName
+\item Date
+\item DailyMax, daily maximum temperature
+\item sevenDADM, the newly calculated 7DADM values
+}
 }
 \description{
 For each period of seven consecutive days, this function computes the daily

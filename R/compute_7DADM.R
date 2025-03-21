@@ -11,6 +11,7 @@
 #' read_in_qcd_data().
 #'
 #' @return A data frame with the following four columns:
+#'
 #'  - SiteName
 #'  - Date
 #'  - DailyMax, daily maximum temperature
