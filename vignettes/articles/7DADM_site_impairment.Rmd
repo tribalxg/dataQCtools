@@ -2,7 +2,7 @@
 title: "Computing 7DADM and identifying site impairments"
 output:
   html_document:
-    css: "article.css"
+    css: "articles/article.css"
     theme: flatly
     number_sections: true
     highlighted: default 
