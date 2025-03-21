@@ -19,6 +19,23 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{css, echo=FALSE}
+pre {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 100px;
+}
+
+.scroll-100 {
+  max-height: 100px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
 ## Editable script
 
 <!-- this script crops raw data from HOBO files -->
@@ -211,4 +228,7 @@ for(this.file in csv_files){
 library(dataQCtools)
 ```
 
+```{r, class.output="scroll-100"}
+
+```
 
