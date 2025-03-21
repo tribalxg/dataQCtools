@@ -10,7 +10,11 @@
 #' 7DADM. In compute_7DADM_and_exceedance(), this data frame is the output of
 #' read_in_qcd_data().
 #'
-#' @return A data frame including the newly calculated 7DADM values.
+#' @return A data frame with the following four columns:
+#'  - SiteName
+#'  - Date
+#'  - DailyMax, daily maximum temperature
+#'  - sevenDADM, the newly calculated 7DADM values
 #' @export
 #'
 #' @examples
