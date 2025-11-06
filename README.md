@@ -16,7 +16,7 @@ This code was developed by [Jess Kunke](https://github.com/jpierkunke), Kim Bray
 
 ## Setting up
 
-You will need to install several following R packages once before using this code for the first time on a given computer. To do this, you can run this line of code in RStudio:
+You will need to install the following R packages once before using this code for the first time on a given computer. To do this, you can run this line of code in RStudio:
 
 ```r
 install.packages(c("zoo", "grid", "plotly", "readxl", "scales", "runner", 
