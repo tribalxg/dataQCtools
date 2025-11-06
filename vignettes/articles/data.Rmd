@@ -1,0 +1,44 @@
+---
+title: "Data requirements"
+output:
+  html_document:
+    css: "article.css"
+    theme: flatly
+    number_sections: true
+    highlighted: default 
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+    toc_depth: 3
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{css, echo = FALSE}
+/* https://bookdown.org/yihui/rmarkdown-cookbook/html-scroll.html */
+pre {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 200px;
+}
+```
+
+The **dataQCtools** package was initially developed for the Hoh Tribe water quality data and is therefore structured to handle data in their format. This page describes the data, how it is collected, and what their workflow is to preprocess, analyze, and report this data. If you are a Tribal environmental professional and your workflow differs from what is described below, please feel free to reach out to us and we can discuss how to adapt **dataQCtools** for your use case.
+
+## What data is collected?
+
+
+
+
+
+
+

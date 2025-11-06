@@ -1,7 +1,7 @@
 dataQCtools: automate data cropping, QC, and more
 ====
 
-Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network. For guides on two ways you can try this code out for your own data workflow, see the "How to use this code" section below.
+Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network. For guidance on two ways you can try this code out for your own data workflow, see the "How to use this code" section below.
 
 ## Overview
 
@@ -34,4 +34,14 @@ There are two basic approaches you can take:
 
 2. Install the `dataQCtools` R package.
   - Ideally over time we will continue to incorporate a variety of workflows, equipment types, and more into the code to make it flexible across Tribes, and then you can simply install the R package and use the functions and documentation.
+  - To install the R package (do this only once):
+
+```r
+install.packages("devtools")
+library(devtools)
+install_github("tribalxg/dataQCtools")
+library(dataQCtools)
+```
+
+Anytime you want to load the R package, use `library(dataQCtools)`.
 
