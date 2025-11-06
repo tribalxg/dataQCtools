@@ -107,6 +107,8 @@ croppedplots_loc <- paste0(base_loc, "2_cropped_plots/")
 
 # name of your LDRTimes file that has the lookup table with deployment/retrieval dates
 ldrtimes_fn <- "LDRTimes_summer22.xlsx"
+# in our case, the LDR file is in the same folder as the raw data
+ldrtimes_loc <- rawdata_loc
 
 # check that R can find your raw data files
 # Get all temperature data filenames
@@ -119,8 +121,7 @@ csv_files = list.files(path = rawdata_loc, pattern = '*csv')
 csv_files
 
 # read in LDR file and take a look at it
-# note: this assumes the LDR file is in the folder indicated by rawdata_loc
-ldrtimes = readxl::read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
+ldrtimes = readxl::read_xlsx(paste0(ldrtimes_loc, ldrtimes_fn))
 
 # once you're sure that file paths are working and your ldrtimes looks right,
 # crop the files!
@@ -243,7 +244,16 @@ library(tidyr)
 library(ggplot2)
 ```
 
+The inputs you need to give the code:
 
+- the folder containing all the ("raw") data files that you want to crop
+- the folder containing the lookup table of your deployment and retrieval times, and what the name of this file is
+- the folder to which the code should save all the cropped data files
+- the folder to which the code should save all the diagnostic plots it makes of the data it cropped
+
+This code currently expects that all the raw data files are in comma-separated value (.csv) format and that the lookup table is a .xlsx file. You can edit the script for your context.
+
+In our case, the raw and cropped folders are both subfolders of another folder, so we define the file path (`base_loc`) to that parent folder and then use it to tell R where it can find the raw and cropped folders (`rawdata_loc` and `cropped_loc`):
 
 ```{r}
 base_loc <- "data/2022_summer/"
@@ -259,24 +269,36 @@ croppedplots_loc <- paste0(base_loc, "2_cropped_plots/")
 
 # name of your LDRTimes file that has the lookup table with deployment/retrieval dates
 ldrtimes_fn <- "LDRTimes_summer22.xlsx"
+# in our case, the LDR file is in the same folder as the raw data
+ldrtimes_loc <- rawdata_loc
+```
 
+Next, we use R to get a list of the filenames of the raw data files, and we call this list `csv_files`:
+
+```{r}
 # check that R can find your raw data files
 # Get all temperature data filenames
 # note: * is called a glob, short for global
 # IMPORTANT: filenames must be in the format sitename_medium_deployseason_deployyear.csv
 #            e.g. NolanLower_air_sum_23.csv
 csv_files = list.files(path = rawdata_loc, pattern = '*csv')
-# this is now a list of all filenames; we haven't read in the data yet, but
-# make sure this lists all the raw files you want to crop
+```
+
+Take a look at the list to make sure that it looks right and contains all the files you want to crop:
+
+```{r}
 csv_files
+```
 
-# read in LDR file and take a look at it
-# note: this assumes the LDR file is in the folder indicated by rawdata_loc
-ldrtimes = readxl::read_xlsx(paste0(rawdata_loc, ldrtimes_fn))
+We also need to read in the **l**ookup table of **d**eployment and **r**etrieval **times**, or `ldrtimes`:
 
-# once you're sure that file paths are working and your ldrtimes looks right,
-# crop the files!
+```{r}
+ldrtimes = readxl::read_xlsx(paste0(ldrtimes_loc, ldrtimes_fn))
+```
 
+Next we crop the files!
+
+```{r}
 i = 0
 for(this.file in csv_files){
   i = i + 1
