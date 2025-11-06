@@ -275,7 +275,7 @@ ldrtimes_loc <- rawdata_loc
 
 Next, we use R to get a list of the filenames of the raw data files, and we call this list `csv_files`:
 
-```{r}
+```{r, eval = FALSE}
 # check that R can find your raw data files
 # Get all temperature data filenames
 # note: * is called a glob, short for global
@@ -286,19 +286,19 @@ csv_files = list.files(path = rawdata_loc, pattern = '*csv')
 
 Take a look at the list to make sure that it looks right and contains all the files you want to crop:
 
-```{r}
+```{r, eval = FALSE}
 csv_files
 ```
 
 We also need to read in the **l**ookup table of **d**eployment and **r**etrieval **times**, or `ldrtimes`:
 
-```{r}
+```{r, eval = FALSE}
 ldrtimes = readxl::read_xlsx(paste0(ldrtimes_loc, ldrtimes_fn))
 ```
 
 Next we crop the files!
 
-```{r}
+```{r, eval = FALSE}
 i = 0
 for(this.file in csv_files){
   i = i + 1
