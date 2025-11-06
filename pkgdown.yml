@@ -1,11 +1,12 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   articles/7DADM_site_impairment: 7DADM_site_impairment.html
   articles/cropping: cropping.html
+  articles/data: data.html
   articles/qcplots: qcplots.html
-last_built: 2025-03-21T16:56Z
+last_built: 2025-11-06T05:46Z
 urls:
   reference: https://tribalxg.github.io/dataQCtools/reference
   article: https://tribalxg.github.io/dataQCtools/articles

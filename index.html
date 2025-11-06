@@ -35,7 +35,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/cropping.html">Cropping data recorded before deployment and after retrieval</a></li>
+<li><a class="dropdown-item" href="articles/data.html">Data requirements</a></li>
+    <li><a class="dropdown-item" href="articles/cropping.html">Cropping data recorded before deployment and after retrieval</a></li>
     <li><a class="dropdown-item" href="articles/qcplots.html">Making QC plots</a></li>
     <li><a class="dropdown-item" href="articles/7DADM_site_impairment.html">Computing 7DADM and identifying site impairments</a></li>
   </ul>
@@ -55,7 +56,7 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="dataqctools-automate-data-cropping-qc-and-more">dataQCtools: automate data cropping, QC, and more<a class="anchor" aria-label="anchor" href="#dataqctools-automate-data-cropping-qc-and-more"></a>
 </h1></div>
-<p>Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network. For guides on two ways you can try this code out for your own data workflow, see the “How to use this code” section below.</p>
+<p>Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network. For guidance on two ways you can try this code out for your own data workflow, see the “How to use this code” section below.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -90,7 +91,14 @@
 </ol>
 <ul>
 <li>Ideally over time we will continue to incorporate a variety of workflows, equipment types, and more into the code to make it flexible across Tribes, and then you can simply install the R package and use the functions and documentation.</li>
+<li>To install the R package (do this only once):</li>
 </ul>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"tribalxg/dataQCtools"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tribalxg.github.io/dataQCtools/">dataQCtools</a></span><span class="op">)</span></span></code></pre></div>
+<p>Anytime you want to load the R package, use <code><a href="https://tribalxg.github.io/dataQCtools/">library(dataQCtools)</a></code>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
@@ -112,7 +120,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Jess Kunke <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0006-1475-3734" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Jess Kunke <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0006-1475-3734" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
@@ -127,7 +135,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
