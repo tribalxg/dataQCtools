@@ -78,6 +78,18 @@ pre[class] {
 }
 </style>
 <div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>Often sensors and equipment record data for some time before they are
+actually deployed in the field. As a result, they may record spurious
+data for a few minutes or hours between when they are first powered on
+or set up and when they are placed in the environment they are meant to
+be monitoring. Similarly, when equipment is retrieved from the field and
+brought to a lab to download data, the equipment often keeps recording
+data in transit. Data cropping is the process of removing the irrelevant
+data recorded before deployment and after retrieval.</p>
+</div>
+<div class="section level2">
 <h2 id="editable-script">Editable script<a class="anchor" aria-label="anchor" href="#editable-script"></a>
 </h2>
 <!-- this script crops raw data from HOBO files -->
@@ -115,6 +127,8 @@ format. Just click the clipboard icon in the top right corner of this
 code chunk to copy the code, then open a new R script in RStudio and
 paste it there, and save the script wherever you would like to store it
 on your computer.</p>
+<p>See the demo in the next section for a step-by-step guide on how this
+script works.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load necessary libraries</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span></span>
@@ -141,6 +155,8 @@ on your computer.</p>
 <span></span>
 <span><span class="co"># name of your LDRTimes file that has the lookup table with deployment/retrieval dates</span></span>
 <span><span class="va">ldrtimes_fn</span> <span class="op">&lt;-</span> <span class="st">"LDRTimes_summer22.xlsx"</span></span>
+<span><span class="co"># in our case, the LDR file is in the same folder as the raw data</span></span>
+<span><span class="va">ldrtimes_loc</span> <span class="op">&lt;-</span> <span class="va">rawdata_loc</span></span>
 <span></span>
 <span><span class="co"># check that R can find your raw data files</span></span>
 <span><span class="co"># Get all temperature data filenames</span></span>
@@ -153,8 +169,7 @@ on your computer.</p>
 <span><span class="va">csv_files</span></span>
 <span></span>
 <span><span class="co"># read in LDR file and take a look at it</span></span>
-<span><span class="co"># note: this assumes the LDR file is in the folder indicated by rawdata_loc</span></span>
-<span><span class="va">ldrtimes</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">ldrtimes_fn</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">ldrtimes</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">ldrtimes_loc</span>, <span class="va">ldrtimes_fn</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># once you're sure that file paths are working and your ldrtimes looks right,</span></span>
 <span><span class="co"># crop the files!</span></span>
@@ -259,10 +274,193 @@ on your computer.</p>
 <span><span class="op">}</span>; <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Done."</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="demo-of-the-above-script">Demo of the above script<a class="anchor" aria-label="anchor" href="#demo-of-the-above-script"></a>
+</h2>
+<p>First we’ll load the libraries we’ll use:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load necessary libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org" class="external-link">readxl</a></span><span class="op">)</span></span>
+<span><span class="co"># all the following six libraries can be loaded either in a single line using</span></span>
+<span><span class="co"># library(tidyverse)</span></span>
+<span><span class="co"># or separately as below</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span> <span class="co"># for handling dates</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'lubridate'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     date, intersect, setdiff, union</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     filter, lag</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<p>The inputs you need to give the code:</p>
+<ul>
+<li>the folder containing all the (“raw”) data files that you want to
+crop</li>
+<li>the folder containing the lookup table of your deployment and
+retrieval times, and what the name of this file is</li>
+<li>the folder to which the code should save all the cropped data
+files</li>
+<li>the folder to which the code should save all the diagnostic plots it
+makes of the data it cropped</li>
+</ul>
+<p>This code currently expects that all the raw data files are in
+comma-separated value (.csv) format and that the lookup table is a .xlsx
+file. You can edit the script for your context.</p>
+<p>In our case, the raw and cropped folders are both subfolders of
+another folder, so we define the file path (<code>base_loc</code>) to
+that parent folder and then use it to tell R where it can find the raw
+and cropped folders (<code>rawdata_loc</code> and
+<code>cropped_loc</code>):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">base_loc</span> <span class="op">&lt;-</span> <span class="st">"data/2022_summer/"</span></span>
+<span></span>
+<span><span class="co"># directory containing your raw data</span></span>
+<span><span class="va">rawdata_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"1_raw_csv/"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># directory where your cropped data will be (or currently is) stored</span></span>
+<span><span class="va">cropped_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"2_cropped_csv/"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># directory where plots of cropped and raw data will be stored</span></span>
+<span><span class="va">croppedplots_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">base_loc</span>, <span class="st">"2_cropped_plots/"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># name of your LDRTimes file that has the lookup table with deployment/retrieval dates</span></span>
+<span><span class="va">ldrtimes_fn</span> <span class="op">&lt;-</span> <span class="st">"LDRTimes_summer22.xlsx"</span></span>
+<span><span class="co"># in our case, the LDR file is in the same folder as the raw data</span></span>
+<span><span class="va">ldrtimes_loc</span> <span class="op">&lt;-</span> <span class="va">rawdata_loc</span></span></code></pre></div>
+<p>Next, we use R to get a list of the filenames of the raw data files,
+and we call this list <code>csv_files</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># check that R can find your raw data files</span></span>
+<span><span class="co"># Get all temperature data filenames</span></span>
+<span><span class="co"># note: * is called a glob, short for global</span></span>
+<span><span class="co"># IMPORTANT: filenames must be in the format sitename_medium_deployseason_deployyear.csv</span></span>
+<span><span class="co">#            e.g. NolanLower_air_sum_23.csv</span></span>
+<span><span class="va">csv_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">rawdata_loc</span>, pattern <span class="op">=</span> <span class="st">'*csv'</span><span class="op">)</span></span></code></pre></div>
+<p>Take a look at the list to make sure that it looks right and contains
+all the files you want to crop:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">csv_files</span></span></code></pre></div>
+<p>We also need to read in the <strong>l</strong>ookup table of
+<strong>d</strong>eployment and <strong>r</strong>etrieval
+<strong>times</strong>, or <code>ldrtimes</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ldrtimes</span> <span class="op">=</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">ldrtimes_loc</span>, <span class="va">ldrtimes_fn</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Next we crop the files!</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">i</span> <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="kw">for</span><span class="op">(</span><span class="va">this.file</span> <span class="kw">in</span> <span class="va">csv_files</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">i</span> <span class="op">=</span> <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>  <span class="co">#this.file = csv_files[1] # uncomment to troubleshoot within loop</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Reading file "</span>, <span class="va">i</span>, <span class="st">" of "</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">csv_files</span><span class="op">)</span>, <span class="st">": "</span>, <span class="va">this.file</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># extract metadata from the filename</span></span>
+<span>  <span class="va">filename.parts</span> <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_split.html" class="external-link">str_split_1</a></span><span class="op">(</span><span class="va">this.file</span>, <span class="st">'[_.]'</span><span class="op">)</span></span>
+<span>  <span class="va">csv.site</span> <span class="op">=</span> <span class="va">filename.parts</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span>  <span class="va">csv.media</span> <span class="op">=</span> <span class="va">filename.parts</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span>  <span class="va">csv.season</span> <span class="op">=</span> <span class="va">filename.parts</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span></span>
+<span>  <span class="va">csv.year</span> <span class="op">=</span> <span class="va">filename.parts</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span></span>
+<span></span>
+<span>  <span class="co"># convert the character-format datetime to an R POSIXct object</span></span>
+<span>  <span class="co"># ymd_hm is the format the character string is in initially; it tells R</span></span>
+<span>  <span class="co"># how to read and interpret the character string</span></span>
+<span>  <span class="co"># sometimes R reads in the datetime format as mdy_hms and sometimes mdy_hm.</span></span>
+<span>  <span class="co"># This tryCatch handles either hh:mm:ss or hh:mm format in csv files</span></span>
+<span>  <span class="va">this.data</span> <span class="op">=</span>  <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span></span>
+<span>    <span class="op">{</span></span>
+<span>      <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">this.file</span><span class="op">)</span>,</span>
+<span>                      skip <span class="op">=</span> <span class="fl">2</span>, <span class="co"># skip the first two lines of the file</span></span>
+<span>                      col_select <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="co"># read only the first three columns of data</span></span>
+<span>                      col_names <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># don't try to name columns from a row of the file</span></span>
+<span>                      show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># suppresses print message</span></span>
+<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"row.num"</span> <span class="op">=</span> <span class="va">X1</span>,</span>
+<span>                      <span class="st">"datetime"</span> <span class="op">=</span> <span class="va">X2</span>,</span>
+<span>                      <span class="st">"temperature"</span> <span class="op">=</span> <span class="va">X3</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>datetime <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">mdy_hms</a></span><span class="op">(</span><span class="va">datetime</span><span class="op">)</span><span class="op">)</span> <span class="co">#for datetime in hh:mm:ss</span></span>
+<span>    <span class="op">}</span>,</span>
+<span>    warning <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">cond</span><span class="op">)</span> <span class="op">{</span> <span class="co">#if datetime isn't in hh:mm:ss, will now try hh:mm format</span></span>
+<span>      <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">rawdata_loc</span>, <span class="va">this.file</span><span class="op">)</span>,</span>
+<span>                      skip <span class="op">=</span> <span class="fl">2</span>, <span class="co"># skip the first two lines of the file</span></span>
+<span>                      col_select <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="co"># read only the first three columns of data</span></span>
+<span>                      col_names <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># don't try to name columns from a row of the file</span></span>
+<span>                      show_col_types <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># suppresses print message</span></span>
+<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"row.num"</span> <span class="op">=</span> <span class="va">X1</span>,</span>
+<span>                      <span class="st">"datetime"</span> <span class="op">=</span> <span class="va">X2</span>,</span>
+<span>                      <span class="st">"temperature"</span> <span class="op">=</span> <span class="va">X3</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>datetime <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">mdy_hm</a></span><span class="op">(</span><span class="va">datetime</span><span class="op">)</span><span class="op">)</span> <span class="co">#for datetime in hh:mm</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># crop the data</span></span>
+<span>  <span class="va">deploy.retrieval</span> <span class="op">=</span> <span class="va">ldrtimes</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="co"># select the row(s) of ldrtimes that match this datafile</span></span>
+<span>    <span class="co"># should be exactly one row, but if there are no rows or multiple rows that</span></span>
+<span>    <span class="co"># match, this step will pull that many rows</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">site</span> <span class="op">==</span> <span class="va">csv.site</span>, <span class="va">deploy_season</span> <span class="op">==</span> <span class="va">csv.season</span>,</span>
+<span>                  <span class="va">deploy_year</span> <span class="op">==</span> <span class="va">csv.year</span>, <span class="va">media</span> <span class="op">==</span> <span class="va">csv.media</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="co"># keep just the deploy_time and retrieval_time variables/columns</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">deploy_time</span>, <span class="va">retrieval_time</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">deploy.retrieval</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"no rows of ldrtimes matched this csv file."</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">deploy.retrieval</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"multiple rows of ldrtimes matched this csv file."</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="va">deploy</span> <span class="op">=</span> <span class="va">deploy.retrieval</span><span class="op">$</span><span class="va">deploy_time</span></span>
+<span>  <span class="va">retrieval</span> <span class="op">=</span> <span class="va">deploy.retrieval</span><span class="op">$</span><span class="va">retrieval_time</span></span>
+<span></span>
+<span>  <span class="kw">if</span><span class="op">(</span><span class="va">retrieval</span> <span class="op">&gt;</span> <span class="va">deploy</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">cropped.data</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">this.data</span>,</span>
+<span>                                 <span class="va">datetime</span> <span class="op">&gt;</span> <span class="va">deploy</span>,</span>
+<span>                                 <span class="va">datetime</span> <span class="op">&lt;</span> <span class="va">retrieval</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="op">}</span> <span class="co"># if(retrieval &gt; deploy)</span></span>
+<span></span>
+<span>  <span class="co"># write cropped csv files to cropped folder</span></span>
+<span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">write_csv</a></span><span class="op">(</span><span class="va">cropped.data</span>,</span>
+<span>                   file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">cropped_loc</span>,</span>
+<span>                               <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_split.html" class="external-link">str_split_i</a></span><span class="op">(</span><span class="va">this.file</span>, <span class="st">"[.]"</span>, <span class="fl">1</span><span class="op">)</span>, <span class="st">"_cropped.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co">#Create a dataframe of the raw and cropped data</span></span>
+<span>  <span class="va">cropvraw</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">this.data</span>, <span class="va">cropped.data</span>, by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"row.num"</span>, <span class="st">"datetime"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>raw.temp <span class="op">=</span> <span class="va">temperature.x</span>,</span>
+<span>                  cropped.temp <span class="op">=</span> <span class="va">temperature.y</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span><span class="co">#rename temperature from each file</span></span>
+<span>    <span class="co">#create new column of data type (raw or cropped for plotting in ggplot)</span></span>
+<span>    <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="va">raw.temp</span><span class="op">:</span><span class="va">cropped.temp</span>,</span>
+<span>                        names_to<span class="op">=</span><span class="st">"type"</span>, values_to<span class="op">=</span><span class="st">"temp"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">cropvraw.plot</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cropvraw</span>,</span>
+<span>                                   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">datetime</span>,</span>
+<span>                                                y <span class="op">=</span> <span class="va">temp</span>,</span>
+<span>                                                color <span class="op">=</span> <span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">" Raw versus Cropped data"</span><span class="op">)</span>,</span>
+<span>                  x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Temperature (C)"</span><span class="op">)</span><span class="op">+</span></span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="op">(</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">croppedplots_loc</span>, <span class="va">csv.site</span>, <span class="st">"_rawvscroppeddata.png"</span><span class="op">)</span>,</span>
+<span>                  <span class="va">cropvraw.plot</span>,</span>
+<span>                  width <span class="op">=</span> <span class="fl">11</span>, height <span class="op">=</span> <span class="fl">8.5</span>, units <span class="op">=</span> <span class="st">"in"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">}</span>; <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Done."</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="demo-using-dataqctoolscrop_raw_data">Demo using <code>dataQCtools::crop_raw_data()</code><a class="anchor" aria-label="anchor" href="#demo-using-dataqctoolscrop_raw_data"></a>
 </h2>
 <p>In development</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tribalxg.github.io/dataQCtools/">dataQCtools</a></span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
