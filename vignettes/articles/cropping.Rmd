@@ -427,7 +427,7 @@ csv.year = filename.parts[4]
 
 
 
-```{r, echo=FALSE}
+```{r, eval = FALSE}
 # convert the character-format datetime to an R POSIXct object
 # ymd_hm is the format the character string is in initially; it tells R
 # how to read and interpret the character string
