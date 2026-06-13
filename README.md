@@ -1,7 +1,9 @@
 dataQCtools: automate data cropping, QC, and more
 ====
 
-Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network. For guidance on two ways you can try this code out for your own data workflow, see the "How to use this code" section below.
+Update: check out related repo [dataQCworkshop](https://github.com/tribalxg/dataQCworkshop) for a ready-to-use-and-test version of these scripts with example data.
+
+Both the code and documentation in this repository are being actively developed for use by Tribes throughout the Tribal Exchange Network. For guidance on two ways you can try this code out for your own data workflow, see the "Setting up" section below.
 
 ## Overview
 
